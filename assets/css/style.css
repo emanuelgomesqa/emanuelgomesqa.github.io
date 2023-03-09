@@ -1,11 +1,7 @@
-/*
- * Theme Name: Pixel Perfect Portfolio
- * Author: Pixel Perfect
- * Author URI/Mail: pixelperfectmk@gmail.com
- * Version: 1.0
- */
-
-
+:root{
+  --main-bg-color-normal: #040130;
+  --main-bg-color-white: #ffffff
+}
 /* CUSTOM RESETS
 ================================================== */
 a, button {
@@ -36,7 +32,7 @@ html, body {
  * Background colors 
  */
 .blue-bg {
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
 }
 
 /* 
@@ -44,34 +40,34 @@ html, body {
  */
 .btn {
   font-family: "Varela", sans-serif;
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
   padding: 0 15px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   height: 44px;
   line-height: 42px;
   border-radius: 0;
-  border: 1px solid #196fc2;
+  border: 1px solid var(--main-bg-color-normal);
   text-transform: uppercase;
 }
 
 .btn-inverted {
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   background-color: transparent;
-  border-color: #ffffff;
+  border-color: var(--main-bg-color-white);
 }
 
 .btn:hover,
 .btn:focus {
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   background-color: transparent;
-  border-color: #ffffff;
+  border-color: var(--main-bg-color-white);
 }
 
 .btn-inverted:hover,
 .btn-inverted:focus {
-  color: #ffffff;
-  background-color: #196fc2;
-  border-color: #196fc2;
+  color: var(--main-bg-color-white);
+  background-color: var(--main-bg-color-normal);
+  border-color: var(--main-bg-color-normal);
 }
 
 /* 
@@ -117,7 +113,7 @@ html, body {
   margin: 0 auto;
   width: 230px;
   height: 230px;
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
   border: 0;
   transform: translate(-50%, -50%) rotate(45deg);
   -webkit-transform: translate(-50%, -50%) rotate(45deg);
@@ -250,7 +246,7 @@ html, body {
 }
 
 .social-icons.small .rectangle:hover i {
-  color: #196fc0;
+  color: var(--main-bg-color-);
 }
 
 .social-icons .rectangle {
@@ -279,7 +275,7 @@ html, body {
   position: relative;
   padding: 0 30px 0 15px;
   height: 60px;
-  background-color: #004b91;
+  background-color: #001121;
   z-index: 2;
 }
 
@@ -290,7 +286,7 @@ html, body {
   height: 100%;
   top: 0;
   right: 0;
-  background-color: #004b91;
+  background-color: #020145;
 }
 
 .site-logo a {
@@ -300,13 +296,13 @@ html, body {
   margin-top: 17px;
   font-size: 26px;
   line-height: 26px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   text-transform: uppercase;
 }
 
 /* Navigation */
 .site-navigation {
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
 }
 
 .site-navigation.affix {
@@ -325,7 +321,7 @@ html, body {
   padding: 0px 3px 21px;
   font-size: 14px;
   line-height: 14px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   text-transform: uppercase;
   border-bottom: 2px solid transparent;
   -webkit-transition: border-color 0.25s ease-in-out;
@@ -347,7 +343,7 @@ html, body {
 .nav > li > a:hover,
 .nav > li.active > a {
   background-color: transparent;
-  border-color: #ffffff;
+  border-color: var(--main-bg-color-white);
 }
 
 .nav > li > a:focus {
@@ -403,7 +399,7 @@ html, body {
   }
   .site-navigation .navbar-collapse {
     position: relative;
-    background-color: #196fc0;
+    background-color: var(--main-bg-color-nor2);
     z-index: 99;
     text-align: center;
     border-top: 0;
@@ -445,7 +441,7 @@ html, body {
 }
 
 .hero-content {
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   display: table-cell;
   vertical-align: middle;
   position: relative;
@@ -475,7 +471,7 @@ html, body {
 
 .hero-content .hero-job span {
   padding-bottom: 5px;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid var(--main-bg-color-white);
 }
 
 .hero-content .hero-job-desc {
@@ -495,7 +491,7 @@ html, body {
 
 .hero-arrow a {
   font-size: 28px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 @-webkit-keyframes home-arrow-down {
@@ -591,7 +587,7 @@ html, body {
 /* SITEMAIN
 ================================================== */
 .site-main {
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   z-index: 1;
 }
 
@@ -606,7 +602,7 @@ html, body {
   font-family: "Varela", sans-serif;
   margin: 0;
   font-size: 32px;
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
   text-align: center;
   text-transform: uppercase;
 }
@@ -894,7 +890,7 @@ html, body {
 
 .progress-bar {
   position: relative;
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
   height: 10px;
 }
 
@@ -907,7 +903,7 @@ html, body {
   height: 0;
   border-style: solid;
   border-width: 0 15px 20px 15px;
-  border-color: transparent transparent #196fc2 transparent;
+  border-color: transparent transparent var(--main-bg-color-normal) transparent;
   z-index: 2;
 }
 
@@ -1003,7 +999,7 @@ html, body {
 
 .section-services .container-fluid {
   padding: 100px 15px 70px;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
 }
 
 .section-services .container-fluid + .container {
@@ -1027,8 +1023,8 @@ html, body {
 
 .section-services .nav-tabs .col-sm-fifth {
   height: 160px;
-  background: #ffffff;
-  border-bottom: 3px solid #196fc2;
+  background: var(--main-bg-color-white);
+  border-bottom: 3px solid var(--main-bg-color-normal);
 }
 
 .section-services .carousel-inner {
@@ -1051,7 +1047,7 @@ html, body {
   margin: 7px 5px 0;
   position: relative;
   border: 1px solid #dddddd;
-  background: #ffffff;
+  background: var(--main-bg-color-white);
   width: 30px;
   height: 30px;
   transform: rotate(45deg);
@@ -1077,12 +1073,12 @@ html, body {
 }
 
 .section-services .item-controls .carousel-control:hover, .section-services .item-controls .carousel-control:focus {
-  background-color: #196fc2;
-  border-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
+  border-color: var(--main-bg-color-normal);
 }
 
 .section-services .item-controls .carousel-control:hover i, .section-services .item-controls .carousel-control:focus i {
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 .section-services .item-controls.left i {
@@ -1146,7 +1142,7 @@ html, body {
 
 .carousel-indicators .active .col-sm-fifth,
 .carousel-indicators a:hover .col-sm-fifth {
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
 }
 
 .carousel-indicators .active .service p,
@@ -1157,7 +1153,7 @@ html, body {
 
 .carousel-indicators .active .service .rectangle,
 .carousel-indicators a:hover .service .rectangle {
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   height: 80px;
   width: 80px;
   margin-bottom: 0;
@@ -1169,7 +1165,7 @@ html, body {
 }
 
 .carousel-indicators .active .service .rectangle {
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
 }
 
 .carousel-indicators .active .service:after {
@@ -1183,7 +1179,7 @@ html, body {
   height: 0;
   border-style: solid;
   border-width: 15px 15px 0 15px;
-  border-color: #196fc2 transparent transparent transparent;
+  border-color: var(--main-bg-color-normal) transparent transparent transparent;
   z-index: 99;
 }
 
@@ -1275,13 +1271,13 @@ html, body {
   box-shadow: none;
   z-index: 99;
   background-color: transparent;
-  color: #ffffff;
-  border: 1px solid #ffffff;
+  color: var(--main-bg-color-white);
+  border: 1px solid var(--main-bg-color-white);
 }
 
 .review-carousel .slick.rectangle:hover {
-  background-color: #ffffff;
-  color: #196fc2;
+  background-color: var(--main-bg-color-white);
+  color: var(--main-bg-color-normal);
 }
 
 .review-carousel .slick.rectangle.slick-next {
@@ -1308,7 +1304,7 @@ html, body {
 
 .review p {
   margin: 45px auto 0;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   max-width: 1000px;
   overflow-x: hidden;
 }
@@ -1327,14 +1323,14 @@ html, body {
   display: block;
   height: 1px;
   width: 50px;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   margin: 0 auto;
 }
 
 .review .review-author h3 {
   margin: 0;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 .review .review-author p {
@@ -1457,9 +1453,9 @@ html, body {
 .team-member .team-member-back {
   padding: 0 20px;
   display: table;
-  background: #196fc2;
+  background: var(--main-bg-color-normal);
   text-align: center;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   transform: rotateY(-180deg);
   -webkit-transform: rotateY(-180deg);
   -moz-transform: rotateY(-180deg);
@@ -1500,7 +1496,7 @@ html, body {
   display: block;
   height: 1px;
   width: 30px;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   margin: 0 auto;
 }
 
@@ -1535,7 +1531,7 @@ html, body {
 }
 
 .section-history .section-diff-title h2 {
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
 }
 
 .section-history .section-diff-title p {
@@ -1582,7 +1578,7 @@ html, body {
   position: relative;
   left: 0.5px;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   box-shadow: none;
 }
 
@@ -1627,7 +1623,7 @@ html, body {
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 0;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 .timeline > li > .timeline-panel .timeline-heading .timeline-date,
@@ -1637,7 +1633,7 @@ html, body {
 
 .timeline > li > .timeline-panel .timeline-heading .timeline-date {
   padding: 0 10px;
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
 }
 
 .timeline > li > .timeline-panel .timeline-heading .timeline-position {
@@ -1784,7 +1780,7 @@ html, body {
   margin: 0;
   border-top: 1px solid #f6f6f6;
   border-right: 1px solid #f6f6f6;
-  border-bottom: 2px solid #196fc2;
+  border-bottom: 2px solid var(--main-bg-color-normal);
   height: 47px;
 }
 
@@ -1805,13 +1801,13 @@ html, body {
 }
 
 .portfolio-sorting li a:hover, .portfolio-sorting li a.active {
-  background-color: #196fc2;
-  color: #ffffff;
-  border-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
+  color: var(--main-bg-color-white);
+  border-color: var(--main-bg-color-normal);
 }
 
 .portfolio-sorting li a:hover:after, .portfolio-sorting li a.active:after {
-  border-color: #196fc2;
+  border-color: var(--main-bg-color-normal);
 }
 
 .portfolio-sorting li a:after, .portfolio-sorting li a.acitve:after {
@@ -1839,7 +1835,7 @@ html, body {
   height: 0;
   border-style: solid;
   border-width: 10px 10px 0 10px;
-  border-color: #196fc2 transparent transparent transparent;
+  border-color: var(--main-bg-color-normal) transparent transparent transparent;
   z-index: 99;
 }
 
@@ -1870,7 +1866,7 @@ html, body {
 
 .portfolio-item .portfolio-item-thumb:after {
   content: '';
-  background-color: #196fc2;
+  background-color: var(--main-bg-color-normal);
   position: absolute;
   left: 0;
   right: 0;
@@ -1889,7 +1885,7 @@ html, body {
   right: 0;
   bottom: 62px;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
   opacity: 0;
   visibility: hidden;
   -webkit-box-shadow: 4px 4px 0px 0px rgba(238, 238, 238, 0.5);
@@ -1955,9 +1951,9 @@ html, body {
 }
 
 .portfolio-item:hover .portfolio-item-thumb .rectangle:hover {
-  background-color: #196fc2;
-  border-color: #196fc2;
-  color: #ffffff;
+  background-color: var(--main-bg-color-normal);
+  border-color: var(--main-bg-color-normal);
+  color: var(--main-bg-color-white);
 }
 
 .portfolio-item:hover .portfolio-info {
@@ -2027,7 +2023,7 @@ html, body {
 .section-background p {
   position: relative;
   margin: 10px 0 0;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 .section-background .btn {
@@ -2046,7 +2042,7 @@ html, body {
 }
 
 .section-quote p span {
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
 }
 
 /* Sections background: Me */
@@ -2056,7 +2052,7 @@ html, body {
 
 .section-me h2 {
   margin: 0;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   position: relative;
 }
 
@@ -2076,7 +2072,7 @@ html, body {
 }
 
 .section-twitter .rectangle i {
-  color: #ffffff;
+  color: var(--main-bg-color-white);
 }
 
 .section-twitter .rectangle + p {
@@ -2093,7 +2089,7 @@ html, body {
   display: block;
   width: 50px;
   height: 1px;
-  background-color: #ffffff;
+  background-color: var(--main-bg-color-white);
 }
 
 @media only screen and (max-width: 767px) {
@@ -2165,8 +2161,8 @@ html, body {
 }
 
 .section-contact .btn:hover {
-  color: #ffffff;
-  border-color: #196fc2;
+  color: var(--main-bg-color-white);
+  border-color: var(--main-bg-color-normal);
 }
 
 .form-control {
@@ -2179,7 +2175,7 @@ html, body {
 
 .form-control:focus {
   box-shadow: none;
-  border-bottom-color: #196fc2;
+  border-bottom-color: var(--main-bg-color-normal);
 }
 
 textarea.form-control {
@@ -2214,13 +2210,13 @@ textarea.form-control {
 
 .section-networks a {
   margin: 10px 8px 5px;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   box-shadow: none;
 }
 
 .section-networks a:hover, .section-networks a:focus {
-  background-color: #ffffff;
-  color: #196fc2;
+  background-color: var(--main-bg-color-white);
+  color: var(--main-bg-color-normal);
 }
 
 /* FOOTER
@@ -2251,7 +2247,7 @@ textarea.form-control {
 }
 
 .site-footer ul a:hover {
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
 }
 
 .site-footer a {
@@ -2261,7 +2257,7 @@ textarea.form-control {
 }
 
 .site-footer a:hover {
-  color: #196fc2;
+  color: var(--main-bg-color-normal);
 }
 
 .site-footer .rectangle {
@@ -2274,13 +2270,13 @@ textarea.form-control {
   height: 40px;
   background-color: #000;
   border: none;
-  color: #ffffff;
+  color: var(--main-bg-color-white);
   box-shadow: none;
 }
 
 .site-footer .rectangle:hover {
-  background-color: #196fc2;
-  color: #ffffff;
+  background-color: var(--main-bg-color-normal);
+  color: var(--main-bg-color-white);
 }
 
 .site-footer .copyright {
@@ -2336,17 +2332,17 @@ textarea.form-control {
   top: -20px;
   height: 40px;
   width: 40px;
-  background-color: #196fc2;
-  color: #ffffff;
+  background-color: var(--main-bg-color-normal);
+  color: var(--main-bg-color-white);
   box-shadow: none;
   border: 0;
   opacity: 1;
 }
 
 .modal-header .rectangle:hover {
-  background-color: #ffffff;
-  color: #196fc2;
-  border-color: #196fc2;
+  background-color: var(--main-bg-color-white);
+  color: var(--main-bg-color-normal);
+  border-color: var(--main-bg-color-normal);
 }
 
 .modal-header,
@@ -2359,9 +2355,9 @@ textarea.form-control {
 }
 
 .modal-footer .btn:hover {
-  background-color: #ffffff;
-  color: #196fc2;
-  border-color: #196fc2;
+  background-color: var(--main-bg-color-white);
+  color: var(--main-bg-color-normal);
+  border-color: var(--main-bg-color-normal);
 }
 
 .modal-content {
