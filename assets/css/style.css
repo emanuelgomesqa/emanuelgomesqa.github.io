@@ -2122,7 +2122,7 @@ html, body {
   height: 85px;
   line-height: 85px;
   text-align: center;
-  margin: 0 15px;
+  margin: 10px;
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
 }
@@ -2134,7 +2134,7 @@ html, body {
 
 .client img {
   display: inline-block;
-  height: 80px;
+  height: 90px;
 }
 
 @media only screen and (max-width: 767px) {
