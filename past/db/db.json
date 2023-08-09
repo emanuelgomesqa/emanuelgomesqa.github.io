@@ -1,0 +1,17 @@
+{
+  "user": {
+    "id": "1",
+    "name": "Maria",
+    "surname": "Williams",
+    "hobbies": [
+      {
+        "name": "Tennis",
+        "since": 1985
+      },
+      {
+        "name": "Reading",
+        "since": 1974
+      }
+    ]
+  }
+}
