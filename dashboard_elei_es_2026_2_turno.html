@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Eleições 2026 - 2º Turno Presidencial</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            candA: {
+              DEFAULT: '#1D4ED8', // Blue
+              light: '#3B82F6',
+              dark: '#1E40AF',
+            },
+            candB: {
+              DEFAULT: '#059669', // Green
+              light: '#10B981',
+              dark: '#065F46',
+            },
+            tseYellow: '#FBBF24',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* Pulse effect for live indicator */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .live-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-yellow-500 selection:text-slate-950">
+
+  <!-- TOP NAVBAR / HEADER -->
+  <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-green-500 to-blue-600 flex items-center justify-center shadow-lg shadow-yellow-500/10">
+          <i class="fa-solid me-0 fa-check-double text-slate-950 font-black text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">Apuração Eleições 2026</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">2º Turno</span>
+          </div>
+          <p class="text-xs text-slate-400">Presidente da República • Brasil</p>
+        </div>
+      </div>
+
+      <!-- Controls & Live Counter -->
+      <div class="flex items-center gap-3 sm:gap-4 ml-auto">
+        
+        <!-- Live Status Pill -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="live-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span id="source-badge" class="font-medium text-emerald-400">Simulação Ativa</span>
+        </div>
+
+        <!-- Mode Toggle (Simulation vs Real TSE API) -->
+        <div class="hidden md:flex items-center bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs">
+          <button id="mode-sim-btn" onclick="setMode('sim')" class="px-2.5 py-1 rounded-md font-medium transition-all bg-slate-700 text-white shadow-sm">
+            <i class="fa-solid fa-flask text-xs mr-1 text-yellow-400"></i> Simulação
+          </button>
+          <button id="mode-api-btn" onclick="setMode('api')" class="px-2.5 py-1 rounded-md font-medium transition-all text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-network-wired text-xs mr-1 text-blue-400"></i> TSE Oficial
+          </button>
+        </div>
+
+        <!-- Timer Circular Progress / Countdown -->
+        <div class="relative flex items-center justify-center w-10 h-10 group cursor-pointer" onclick="toggleAutoRefresh()" title="Clique para pausar/retomar auto-atualização">
+          <svg class="w-10 h-10 transform -rotate-90">
+            <circle cx="20" cy="20" r="16" stroke="currentColor" stroke-width="2.5" class="text-slate-800" fill="transparent" />
+            <circle id="timer-circle" cx="20" cy="20" r="16" stroke="currentColor" stroke-width="2.5" class="text-yellow-500 transition-all duration-1000 ease-linear" fill="transparent" stroke-dasharray="100" stroke-dashoffset="0" />
+          </svg>
+          <span id="timer-text" class="absolute text-[10px] font-bold text-slate-200">60s</span>
+        </div>
+
+        <!-- Refresh Button -->
+        <button id="refresh-btn" onclick="manualRefresh()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-medium px-3.5 py-2 rounded-lg text-xs sm:text-sm shadow-md transition-all">
+          <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i>
+          <span class="hidden sm:inline">Atualizar Agora</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- SUBHEADER / STATUS BAR -->
+  <div class="bg-slate-900/50 border-b border-slate-800/80 px-4 py-2 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-4">
+        <span><i class="fa-regular fa-clock text-slate-500 mr-1"></i> Última atualização: <strong id="last-update-time" class="text-slate-200">--:--:--</strong></span>
+        <span class="hidden sm:inline text-slate-700">•</span>
+        <span class="hidden sm:inline"><i class="fa-solid fa-database text-slate-500 mr-1"></i> Seções Totalizadas: <strong id="totalized-sections-count" class="text-slate-200">0 / 0</strong></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="api-status-msg" class="text-slate-400 italic">Atualização automática em 60s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1 w-full">
+
+    <!-- 1. OVERVIEW PROGRESS & TOP CARDS -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Total Progress Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Totalização Geral</p>
+            <h3 id="progress-percent" class="text-3xl font-black text-white mt-1">0,00%</h3>
+          </div>
+          <div class="p-2.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+            <i class="fa-solid fa-box-archive text-lg"></i>
+          </div>
+        </div>
+        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mb-2">
+          <div id="progress-bar-inner" class="bg-gradient-to-r from-blue-500 to-emerald-400 h-full transition-all duration-700" style="width: 0%"></div>
+        </div>
+        <p class="text-xs text-slate-400 flex justify-between">
+          <span>Apuradas: <strong id="sections-percent" class="text-slate-200">0,00%</strong></span>
+          <span>Restantes: <strong id="sections-remaining" class="text-slate-200">100%</strong></span>
+        </p>
+      </div>
+
+      <!-- Total Votes Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Votos Totais Apurados</p>
+            <h3 id="total-votes-count" class="text-2xl font-black text-white mt-1">0</h3>
+          </div>
+          <div class="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20">
+            <i class="fa-solid fa-check-to-slot text-lg"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-2 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+          <span>Votos Válidos:</span>
+          <strong id="valid-votes-count" class="text-slate-200">0 (0%)</strong>
+        </div>
+      </div>
+
+      <!-- Comparecimento vs Abstenção -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Comparecimento</p>
+            <h3 id="attendance-percent" class="text-2xl font-black text-emerald-400 mt-1">0,00%</h3>
+          </div>
+          <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+            <i class="fa-solid fa-users text-lg"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-2 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+          <span>Abstenção:</span>
+          <strong id="abstention-percent" class="text-rose-400">0,00% (0)</strong>
+        </div>
+      </div>
+
+      <!-- Brancos e Nulos -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Brancos & Nulos</p>
+            <h3 id="invalid-votes-total" class="text-2xl font-black text-amber-400 mt-1">0,00%</h3>
+          </div>
+          <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
+            <i class="fa-solid fa-ban text-lg"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-2 border-t border-slate-800/80 flex justify-between text-xs text-slate-400">
+          <span>Brancos: <strong id="null-votes-count" class="text-slate-200">0</strong></span>
+          <span>Nulos: <strong id="blank-votes-count" class="text-slate-200">0</strong></span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 2. HEAD-TO-HEAD CANDIDATES & MARGIN CARD -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-md relative overflow-hidden">
+      
+      <!-- Subtle BG Glow -->
+      <div class="absolute -top-24 -left-24 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+
+        <!-- Candidate A Card -->
+        <div class="w-full lg:w-5/12 bg-slate-950/60 border border-slate-800 rounded-2xl p-5 transition-all duration-300 hover:border-blue-500/40 relative">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <img id="cand-a-photo" src="https://placehold.co/120x120/1d4ed8/ffffff?text=CANDIDATO+1" alt="Candidato 1" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-blue-500 shadow-md">
+              <span class="absolute -bottom-2 -right-1 bg-blue-600 text-white font-bold text-xs px-2 py-0.5 rounded-md shadow">
+                #<span id="cand-a-num">13</span>
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-blue-500/20 text-blue-400 border border-blue-500/30" id="cand-a-party">PT / Coligação</span>
+                <span id="cand-a-status" class="hidden text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">LÍDER</span>
+              </div>
+              <h2 id="cand-a-name" class="text-xl sm:text-2xl font-black text-white truncate mt-1">Candidato A</h2>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span id="cand-a-percent" class="text-3xl sm:text-4xl font-extrabold text-blue-400">0,00%</span>
+                <span id="cand-a-votes" class="text-xs text-slate-400 font-medium">(0 votos)</span>
+              </div>
+            </div>
+          </div>
+          <!-- Progress bar -->
+          <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mt-4">
+            <div id="cand-a-bar" class="bg-blue-500 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- VERSUS & MARGIN COUNTER CENTER PIECE -->
+        <div class="w-full lg:w-2/12 flex flex-col items-center justify-center text-center px-2 py-2">
+          
+          <span class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Diferença Atual</span>
+          
+          <!-- Animated Vote Gap Indicator -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 w-full max-w-[220px] shadow-inner text-center">
+            <div id="margin-leader-badge" class="text-[11px] font-bold uppercase tracking-wider text-yellow-400 mb-0.5">--</div>
+            <div id="margin-votes-count" class="text-xl font-black text-white">0</div>
+            <div id="margin-percent-diff" class="text-xs font-semibold text-slate-400 mt-0.5">0,00% de vantagem</div>
+          </div>
+
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <i class="fa-solid fa-scale-balanced text-yellow-500"></i>
+            <span>Votos Válidos Totais</span>
+          </div>
+        </div>
+
+        <!-- Candidate B Card -->
+        <div class="w-full lg:w-5/12 bg-slate-950/60 border border-slate-800 rounded-2xl p-5 transition-all duration-300 hover:border-emerald-500/40 relative">
+          <div class="flex items-center gap-4 flex-row-reverse sm:flex-row">
+            <div class="flex-1 min-w-0 sm:text-right">
+              <div class="flex items-center gap-2 sm:justify-end">
+                <span id="cand-b-status" class="hidden text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">LÍDER</span>
+                <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" id="cand-b-party">PL / Coligação</span>
+              </div>
+              <h2 id="cand-b-name" class="text-xl sm:text-2xl font-black text-white truncate mt-1">Candidato B</h2>
+              <div class="mt-2 flex items-baseline gap-2 sm:justify-end">
+                <span id="cand-b-percent" class="text-3xl sm:text-4xl font-extrabold text-emerald-400">0,00%</span>
+                <span id="cand-b-votes" class="text-xs text-slate-400 font-medium">(0 votos)</span>
+              </div>
+            </div>
+            <div class="relative">
+              <img id="cand-b-photo" src="https://placehold.co/120x120/059669/ffffff?text=CANDIDATO+2" alt="Candidato 2" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-emerald-500 shadow-md">
+              <span class="absolute -bottom-2 -left-1 sm:-left-auto sm:-right-1 bg-emerald-600 text-white font-bold text-xs px-2 py-0.5 rounded-md shadow">
+                #<span id="cand-b-num">22</span>
+              </span>
+            </div>
+          </div>
+          <!-- Progress bar -->
+          <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mt-4">
+            <div id="cand-b-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. CHARTS SECTION -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Timeline Evolution Chart (2 cols) -->
+      <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-blue-400"></i> Evolução Percentual da Apuração
+            </h3>
+            <p class="text-xs text-slate-400">Histórico de porcentagem dos candidatos a cada nova parcial</p>
+          </div>
+          <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">Ao vivo</span>
+        </div>
+        <div class="w-full h-64 sm:h-80 relative">
+          <canvas id="evolutionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Vote Distribution Chart (1 col) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="mb-4">
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composição dos Votos
+          </h3>
+          <p class="text-xs text-slate-400">Proporção entre válidos, nulos e brancos</p>
+        </div>
+        <div class="w-full h-64 sm:h-72 relative flex items-center justify-center">
+          <canvas id="distributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Difference Tracker Chart (Full Width) -->
+      <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-chart-area text-amber-400"></i> Histórico da Diferença Bruta de Votos
+            </h3>
+            <p class="text-xs text-slate-400">Vantagem absoluta (em quantidade de votos) do líder sobre o segundo colocado</p>
+          </div>
+        </div>
+        <div class="w-full h-48 sm:h-60 relative">
+          <canvas id="marginChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 4. GEOGRAPHIC / REGIONAL BREAKDOWN TABLE -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+        <div>
+          <h3 class="font-bold text-white text-lg flex items-center gap-2">
+            <i class="fa-solid fa-map-location-dot text-yellow-400"></i> Apuração por Unidade da Federação (UF)
+          </h3>
+          <p class="text-xs text-slate-400">Acompanhe o ritmo de totalização e liderança em cada Estado e no Exterior</p>
+        </div>
+
+        <!-- Search input -->
+        <div class="relative w-full sm:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+          <input type="text" id="uf-search" oninput="filterUFTable()" placeholder="Buscar UF ou Estado..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-800">
+            <tr>
+              <th scope="col" class="py-3 px-4">UF</th>
+              <th scope="col" class="py-3 px-4">Seções Totalizadas</th>
+              <th scope="col" class="py-3 px-4" id="table-cand-a-header">Candidato A (%)</th>
+              <th scope="col" class="py-3 px-4" id="table-cand-b-header">Candidato B (%)</th>
+              <th scope="col" class="py-3 px-4">Diferença (Votos)</th>
+              <th scope="col" class="py-3 px-4 text-center">Status Liderança</th>
+            </tr>
+          </thead>
+          <tbody id="uf-table-body" class="divide-y divide-slate-800/60 bg-slate-900">
+            <!-- Dynamic UF Rows inserted via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. TSE API SPECIFICATIONS & PROXY GUIDE -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+      <button onclick="toggleApiAccordion()" class="w-full flex items-center justify-between text-left focus:outline-none group">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 group-hover:bg-blue-500/20 transition-all">
+            <i class="fa-solid fa-code text-base"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base">Documentação da API TSE & Parâmetros Oficiais</h3>
+            <p class="text-xs text-slate-400">Especificações dos endpoints JSON do Tribunal Superior Eleitoral para o 2º Turno 2026</p>
+          </div>
+        </div>
+        <i id="accordion-arrow" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+      </button>
+
+      <!-- Accordion Body -->
+      <div id="api-accordion-content" class="hidden mt-5 pt-5 border-t border-slate-800 text-xs text-slate-300 space-y-4">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Endpoint Card -->
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <h4 class="font-bold text-yellow-400 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-link"></i> Endpoint Oficial Brasil (Totalização)
+            </h4>
+            <code class="block bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[11px] text-blue-300 font-mono break-all select-all">
+              https://resultados.tse.jus.br/oficial/ele2026/545/dados-simplificados/br/br-c0001-e000545-r.json
+            </code>
+            <p class="mt-2 text-[11px] text-slate-400">
+              * Nota: Durante a noite de eleição, o TSE pode aplicar políticas restritivas de CORS no navegador. Em ambiente local/produção, utiliza-se um backend/proxy para consultar o JSON a cada minuto.
+            </p>
+          </div>
+
+          <!-- Parameters Spec -->
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <h4 class="font-bold text-emerald-400 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-list-check"></i> Dicionário Principais Parâmetros TSE
+            </h4>
+            <ul class="space-y-1 font-mono text-[11px] text-slate-300">
+              <li><strong class="text-blue-400">pst:</strong> Porcentagem das seções totalizadas (% de apuração)</li>
+              <li><strong class="text-blue-400">s:</strong> Total de seções eleitorais</li>
+              <li><strong class="text-blue-400">st:</strong> Seções totalizadas</li>
+              <li><strong class="text-blue-400">cand:</strong> Array com candidatos e votos (<code class="text-amber-300">n</code>, <code class="text-amber-300">vap</code>, <code class="text-amber-300">pvap</code>)</li>
+              <li><strong class="text-blue-400">vv:</strong> Votos Válidos | <strong class="text-blue-400">van:</strong> Votos Anulados</li>
+              <li><strong class="text-blue-400">vb:</strong> Votos em Branco | <strong class="text-blue-400">tvn:</strong> Total Votos Nulos</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Local Proxy Example Code -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+          <h4 class="font-bold text-slate-200 mb-2">Como ignorar CORS usando Node.js/Express Proxy</h4>
+          <pre class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] font-mono text-emerald-300 overflow-x-auto">
+// Exemplo simples de Proxy Server em Node.js
+const express = require('express');
+const fetch = require('node-fetch');
+const app = express();
+
+app.get('/api/tse-2turno', async (req, res) => {
+  try {
+    const response = await fetch('https://resultados.tse.jus.br/oficial/ele2026/545/dados-simplificados/br/br-c0001-e000545-r.json');
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao conectar ao TSE' });
+  }
+});
+          </pre>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 border-t border-slate-800 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>Dashboard de Acompanhamento das Eleições Presidenciais 2026 - 2º Turno.</p>
+      <p class="flex items-center gap-1">
+        <span>Desenvolvido para alta performance em tempo real</span>
+        <i class="fa-solid fa-bolt text-yellow-500"></i>
+      </p>
+    </div>
+  </footer>
+
+  <!-- APPLICATION LOGIC & DATA SIMULATION SCRIPT -->
+  <script>
+    // Global State Variables
+    let currentMode = 'sim'; // 'sim' or 'api'
+    let autoRefreshActive = true;
+    let timerCountdown = 60;
+    let timerInterval = null;
+    let chartInstanceEvolution = null;
+    let chartInstanceDistribution = null;
+    let chartInstanceMargin = null;
+
+    // Simulation Data Model
+    const simState = {
+      progressPercent: 0,
+      totalSections: 125000,
+      totalizedSections: 0,
+      totalVoters: 156000000,
+      candA: {
+        sqcand: "1001",
+        n: "13",
+        nm: "LULA",
+        cc: "PT - FE BRASIL",
+        vap: 0,
+        pvap: "0.00"
+      },
+      candB: {
+        sqcand: "1002",
+        n: "22",
+        nm: "BOLSONARO",
+        cc: "PL",
+        vap: 0,
+        pvap: "0.00"
+      },
+      validVotes: 0,
+      nullVotes: 0,
+      blankVotes: 0,
+      attendance: 0,
+      abstention: 0,
+      history: []
+    };
+
+    // States dataset for simulation regional breakdown
+    const stateList = [
+      { uf: 'AC', name: 'Acre', sections: 2100 },
+      { uf: 'AL', name: 'Alagoas', sections: 6800 },
+      { uf: 'AM', name: 'Amazonas', sections: 7200 },
+      { uf: 'AP', name: 'Aapá', sections: 1800 },
+      { uf: 'BA', name: 'Bahia', sections: 34000 },
+      { uf: 'CE', name: 'Ceará', sections: 22000 },
+      { uf: 'DF', name: 'Distrito Federal', sections: 6700 },
+      { uf: 'ES', name: 'Espírito Santo', sections: 9100 },
+      { uf: 'GO', name: 'Goiás', sections: 15000 },
+      { uf: 'MA', name: 'Maranhão', sections: 16500 },
+      { uf: 'MG', name: 'Minas Gerais', sections: 48000 },
+      { uf: 'MS', name: 'Mato Grosso do Sul', sections: 6900 },
+      { uf: 'MT', name: 'Mato Grosso', sections: 8200 },
+      { uf: 'PA', name: 'Pará', sections: 17500 },
+      { uf: 'PB', name: 'Paraíba', sections: 10200 },
+      { uf: 'PE', name: 'Pernambuco', sections: 21000 },
+      { uf: 'PI', name: 'Piauí', sections: 8900 },
+      { uf: 'PR', name: 'Paraná', sections: 26000 },
+      { uf: 'RJ', name: 'Rio de Janeiro', sections: 38000 },
+      { uf: 'RN', name: 'Rio Grande do Norte', sections: 8100 },
+      { uf: 'RO', name: 'Rondônia', sections: 4300 },
+      { uf: 'RR', name: 'Roraima', sections: 1300 },
+      { uf: 'RS', name: 'Rio Grande do Sul', sections: 27500 },
+      { uf: 'SC', name: 'Santa Catarina', sections: 16200 },
+      { uf: 'SE', name: 'Sergipe', sections: 5800 },
+      { uf: 'SP', name: 'São Paulo', sections: 95000 },
+      { uf: 'TO', name: 'Tocantins', sections: 3900 },
+      { uf: 'ZZ', name: 'Exterior', sections: 1100 }
+    ];
+
+    let stateDataStore = [];
+
+    // Initialize Application
+    window.onload = function() {
+      initCharts();
+      initStateData();
+      startTimer();
+      fetchData();
+    };
+
+    // Initialize Regional State Data
+    function initStateData() {
+      stateDataStore = stateList.map(item => ({
+        uf: item.uf,
+        name: item.name,
+        totalSections: item.sections,
+        totalizedSections: 0,
+        candAVotes: 0,
+        candBVotes: 0
+      }));
+    }
+
+    // Toggle Mode (Simulation vs Official TSE API)
+    function setMode(mode) {
+      currentMode = mode;
+      const simBtn = document.getElementById('mode-sim-btn');
+      const apiBtn = document.getElementById('mode-api-btn');
+      const badge = document.getElementById('source-badge');
+
+      if (mode === 'sim') {
+        simBtn.className = 'px-2.5 py-1 rounded-md font-medium transition-all bg-slate-700 text-white shadow-sm';
+        apiBtn.className = 'px-2.5 py-1 rounded-md font-medium transition-all text-slate-400 hover:text-slate-200';
+        badge.innerText = 'Simulação Ativa';
+        badge.className = 'font-medium text-emerald-400';
+      } else {
+        apiBtn.className = 'px-2.5 py-1 rounded-md font-medium transition-all bg-slate-700 text-white shadow-sm';
+        simBtn.className = 'px-2.5 py-1 rounded-md font-medium transition-all text-slate-400 hover:text-slate-200';
+        badge.innerText = 'API TSE Oficial';
+        badge.className = 'font-medium text-blue-400';
+      }
+
+      fetchData();
+    }
+
+    // Timer Control Logic
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerCountdown = 60;
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        if (!autoRefreshActive) return;
+        timerCountdown--;
+        if (timerCountdown <= 0) {
+          timerCountdown = 60;
+          fetchData();
+        }
+        updateTimerUI();
+      }, 1000);
+    }
+
+    function toggleAutoRefresh() {
+      autoRefreshActive = !autoRefreshActive;
+      const statusMsg = document.getElementById('api-status-msg');
+      if (autoRefreshActive) {
+        statusMsg.innerText = `Atualização automática em ${timerCountdown}s`;
+      } else {
+        statusMsg.innerText = 'Atualização automática PAUSADA';
+      }
+    }
+
+    function updateTimerUI() {
+      const circle = document.getElementById('timer-circle');
+      const text = document.getElementById('timer-text');
+      const dashoffset = 100 - (timerCountdown / 60) * 100;
+      circle.style.strokeDashoffset = dashoffset;
+      text.innerText = `${timerCountdown}s`;
+
+      if (autoRefreshActive) {
+        document.getElementById('api-status-msg').innerText = `Atualização automática em ${timerCountdown}s`;
+      }
+    }
+
+    function manualRefresh() {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('fa-spin');
+      fetchData().then(() => {
+        setTimeout(() => icon.classList.remove('fa-spin'), 600);
+      });
+      timerCountdown = 60;
+      updateTimerUI();
+    }
+
+    // Main Data Fetcher
+    async function fetchData() {
+      const timeStr = new Date().toLocaleTimeString('pt-BR');
+      document.getElementById('last-update-time').innerText = timeStr;
+
+      if (currentMode === 'sim') {
+        runSimulationTick(timeStr);
+      } else {
+        await fetchTseOfficial(timeStr);
+      }
+    }
+
+    // Official TSE JSON Fetcher
+    async function fetchTseOfficial(timeStr) {
+      // TSE 2nd Round Official Endpoint URL (Brazil)
+      const url = 'https://resultados.tse.jus.br/oficial/ele2026/545/dados-simplificados/br/br-c0001-e000545-r.json';
+      
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error('Falha ao obter dados do TSE');
+        const data = await response.json();
+        
+        parseAndUpdateTseData(data, timeStr);
+      } catch (err) {
+        console.warn('CORS ou Erro de Rede ao acessar TSE diretamente. Alternando para dados simulados de fallback.', err);
+        document.getElementById('api-status-msg').innerText = 'Aviso: TSE inacessível via CORS. Exibindo dados simulados.';
+        runSimulationTick(timeStr);
+      }
+    }
+
+    // Parse Official TSE Data Payload
+    function parseAndUpdateTseData(data, timeStr) {
+      // Extract data fields according to TSE Specs
+      const pst = parseFloat(data.pst.replace(',', '.')) || 0;
+      const st = parseInt(data.st) || 0;
+      const s = parseInt(data.s) || 0;
+      const tv = parseInt(data.tv) || 0;
+      const vv = parseInt(data.vv) || 0;
+      const vb = parseInt(data.vb) || 0;
+      const tvn = parseInt(data.tvn) || 0;
+      const a = parseInt(data.a) || 0;
+      const c = parseInt(data.c) || 0;
+
+      const candList = data.cand || [];
+      const candAData = candList[0] || { nm: 'CANDIDATO 1', n: '13', vap: '0', pvap: '0.00' };
+      const candBData = candList[1] || { nm: 'CANDIDATO 2', n: '22', vap: '0', pvap: '0.00' };
+
+      const parsedA = {
+        name: candAData.nm,
+        num: candAData.n,
+        party: candAData.cc || 'PARTIDO A',
+        votes: parseInt(candAData.vap) || 0,
+        percent: parseFloat(candAData.pvap.replace(',', '.')) || 0
+      };
+
+      const parsedB = {
+        name: candBData.nm,
+        num: candBData.n,
+        party: candBData.cc || 'PARTIDO B',
+        votes: parseInt(candBData.vap) || 0,
+        percent: parseFloat(candBData.pvap.replace(',', '.')) || 0
+      };
+
+      const attPercent = c + a > 0 ? ((c / (c + a)) * 100).toFixed(2) : "0.00";
+      const absPercent = c + a > 0 ? ((a / (c + a)) * 100).toFixed(2) : "0.00";
+
+      // Render Dashboard
+      renderDashboard({
+        progressPercent: pst.toFixed(2),
+        totalizedSections: st,
+        totalSections: s,
+        totalVotes: tv,
+        validVotes: vv,
+        blankVotes: vb,
+        nullVotes: tvn,
+        attendancePercent: attPercent,
+        abstentionPercent: absPercent,
+        candA: parsedA,
+        candB: parsedB,
+        timeStr: timeStr
+      });
+    }
+
+    // Simulation Engine: Ticks progress realistically
+    function runSimulationTick(timeStr) {
+      if (simState.progressPercent < 100) {
+        // Increment progress by 1.5% - 4.5% each tick
+        simState.progressPercent = Math.min(100, simState.progressPercent + (Math.random() * 3 + 1.5));
+      }
+
+      simState.totalizedSections = Math.floor((simState.progressPercent / 100) * simState.totalSections);
+
+      // Total expected valid votes ~115 million
+      const totalSimValid = Math.floor((simState.progressPercent / 100) * 115000000);
+      
+      // Dynamic shift: Candidate A starts slightly ahead, Candidate B catches up or vice versa
+      let biasA = 0.505 - (simState.progressPercent / 100) * 0.012; // Dynamic election night swing
+      
+      const votesA = Math.floor(totalSimValid * biasA);
+      const votesB = totalSimValid - votesA;
+
+      const pvapA = totalSimValid > 0 ? ((votesA / totalSimValid) * 100).toFixed(2) : "0.00";
+      const pvapB = totalSimValid > 0 ? ((votesB / totalSimValid) * 100).toFixed(2) : "0.00";
+
+      simState.candA.vap = votesA;
+      simState.candA.pvap = pvapA;
+      simState.candB.vap = votesB;
+      simState.candB.pvap = pvapB;
+
+      simState.validVotes = totalSimValid;
+      simState.blankVotes = Math.floor(totalSimValid * 0.018);
+      simState.nullVotes = Math.floor(totalSimValid * 0.032);
+      const totalVotes = simState.validVotes + simState.blankVotes + simState.nullVotes;
+
+      // Update Simulated State Data
+      stateDataStore.forEach(st => {
+        st.totalizedSections = Math.floor((simState.progressPercent / 100) * st.totalSections);
+        const stValid = Math.floor((st.totalizedSections / st.totalSections) * (st.totalSections * 800));
+        st.candAVotes = Math.floor(stValid * (biasA + (Math.sin(st.uf.charCodeAt(0)) * 0.1)));
+        st.candBVotes = Math.max(0, stValid - st.candAVotes);
+      });
+
+      renderDashboard({
+        progressPercent: simState.progressPercent.toFixed(2),
+        totalizedSections: simState.totalizedSections,
+        totalSections: simState.totalSections,
+        totalVotes: totalVotes,
+        validVotes: simState.validVotes,
+        blankVotes: simState.blankVotes,
+        nullVotes: simState.nullVotes,
+        attendancePercent: (79.2 + Math.random() * 0.4).toFixed(2),
+        abstentionPercent: (20.8 - Math.random() * 0.4).toFixed(2),
+        candA: {
+          name: "LULA",
+          num: "13",
+          party: "PT",
+          votes: simState.candA.vap,
+          percent: simState.candA.pvap
+        },
+        candB: {
+          name: "BOLSONARO",
+          num: "22",
+          party: "PL",
+          votes: simState.candB.vap,
+          percent: simState.candB.pvap
+        },
+        timeStr: timeStr
+      });
+    }
+
+    // Render All UI Components
+    function renderDashboard(data) {
+      // 1. Header & Progress Stats
+      document.getElementById('totalized-sections-count').innerText = `${formatNumber(data.totalizedSections)} / ${formatNumber(data.totalSections)}`;
+      document.getElementById('progress-percent').innerText = `${data.progressPercent}%`;
+      document.getElementById('progress-bar-inner').style.width = `${data.progressPercent}%`;
+      document.getElementById('sections-percent').innerText = `${data.progressPercent}%`;
+      document.getElementById('sections-remaining').innerText = `${(100 - parseFloat(data.progressPercent)).toFixed(2)}%`;
+
+      document.getElementById('total-votes-count').innerText = formatNumber(data.totalVotes);
+      
+      const validRatio = data.totalVotes > 0 ? ((data.validVotes / data.totalVotes) * 100).toFixed(2) : "0.00";
+      document.getElementById('valid-votes-count').innerText = `${formatNumber(data.validVotes)} (${validRatio}%)`;
+
+      document.getElementById('attendance-percent').innerText = `${data.attendancePercent}%`;
+      document.getElementById('abstention-percent').innerText = `${data.abstentionPercent}%`;
+
+      const invalidTotal = data.blankVotes + data.nullVotes;
+      const invalidPercent = data.totalVotes > 0 ? ((invalidTotal / data.totalVotes) * 100).toFixed(2) : "0.00";
+      document.getElementById('invalid-votes-total').innerText = `${invalidPercent}%`;
+      document.getElementById('null-votes-count').innerText = formatNumber(data.nullVotes);
+      document.getElementById('blank-votes-count').innerText = formatNumber(data.blankVotes);
+
+      // 2. Candidate Cards
+      const candA = data.candA;
+      const candB = data.candB;
+
+      document.getElementById('cand-a-name').innerText = candA.name;
+      document.getElementById('cand-a-num').innerText = candA.num;
+      document.getElementById('cand-a-party').innerText = candA.party;
+      document.getElementById('cand-a-percent').innerText = `${candA.percent}%`;
+      document.getElementById('cand-a-votes').innerText = `(${formatNumber(candA.votes)} votos)`;
+      document.getElementById('cand-a-bar').style.width = `${candA.percent}%`;
+
+      document.getElementById('cand-b-name').innerText = candB.name;
+      document.getElementById('cand-b-num').innerText = candB.num;
+      document.getElementById('cand-b-party').innerText = candB.party;
+      document.getElementById('cand-b-percent').innerText = `${candB.percent}%`;
+      document.getElementById('cand-b-votes').innerText = `(${formatNumber(candB.votes)} votos)`;
+      document.getElementById('cand-b-bar').style.width = `${candB.percent}%`;
+
+      // Update Table Headers with names
+      document.getElementById('table-cand-a-header').innerText = `${candA.name} (%)`;
+      document.getElementById('table-cand-b-header').innerText = `${candB.name} (%)`;
+
+      // 3. Margin Counter calculation
+      const diffVotes = Math.abs(candA.votes - candB.votes);
+      const diffPercent = Math.abs(parseFloat(candA.percent) - parseFloat(candB.percent)).toFixed(2);
+      
+      const marginVotesElem = document.getElementById('margin-votes-count');
+      const marginBadgeElem = document.getElementById('margin-leader-badge');
+      const marginPercentElem = document.getElementById('margin-percent-diff');
+
+      marginVotesElem.innerText = formatNumber(diffVotes);
+      marginPercentElem.innerText = `${diffPercent}% de vantagem`;
+
+      const statusA = document.getElementById('cand-a-status');
+      const statusB = document.getElementById('cand-b-status');
+
+      if (candA.votes > candB.votes) {
+        marginBadgeElem.innerText = `Liderança: ${candA.name}`;
+        marginBadgeElem.className = 'text-[11px] font-bold uppercase tracking-wider text-blue-400 mb-0.5';
+        statusA.classList.remove('hidden');
+        statusB.classList.add('hidden');
+      } else if (candB.votes > candA.votes) {
+        marginBadgeElem.innerText = `Liderança: ${candB.name}`;
+        marginBadgeElem.className = 'text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-0.5';
+        statusB.classList.remove('hidden');
+        statusA.classList.add('hidden');
+      } else {
+        marginBadgeElem.innerText = `EMPATE TÉCNICO`;
+        marginBadgeElem.className = 'text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-0.5';
+        statusA.classList.add('hidden');
+        statusB.classList.add('hidden');
+      }
+
+      // 4. Update Charts
+      updateCharts(data.timeStr, parseFloat(candA.percent), parseFloat(candB.percent), data.validVotes, data.nullVotes, data.blankVotes, diffVotes);
+
+      // 5. Render UF Table
+      renderUFTable();
+    }
+
+    // Render Geographic State Breakdown Table
+    function renderUFTable() {
+      const tbody = document.getElementById('uf-table-body');
+      const searchTerm = (document.getElementById('uf-search').value || '').toLowerCase();
+
+      const filtered = stateDataStore.filter(st => 
+        st.uf.toLowerCase().includes(searchTerm) || st.name.toLowerCase().includes(searchTerm)
+      );
+
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">Nenhuma UF encontrada.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(st => {
+        const totalValid = st.candAVotes + st.candBVotes;
+        const pA = totalValid > 0 ? ((st.candAVotes / totalValid) * 100).toFixed(2) : "0.00";
+        const pB = totalValid > 0 ? ((st.candBVotes / totalValid) * 100).toFixed(2) : "0.00";
+        const diff = Math.abs(st.candAVotes - st.candBVotes);
+        const pSec = st.totalSections > 0 ? ((st.totalizedSections / st.totalSections) * 100).toFixed(1) : "0.0";
+
+        let leaderBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Aguardando</span>`;
+        if (st.candAVotes > st.candBVotes) {
+          leaderBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">Candidato A</span>`;
+        } else if (st.candBVotes > st.candAVotes) {
+          leaderBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Candidato B</span>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-800/40 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-white flex items-center gap-2">
+            <span class="w-6 text-center font-mono text-slate-400 text-[10px] bg-slate-950 py-0.5 rounded border border-slate-800">${st.uf}</span>
+            <span>${st.name}</span>
+          </td>
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-2">
+              <div class="w-16 bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+                <div class="bg-yellow-500 h-full" style="width: ${pSec}%"></div>
+              </div>
+              <span class="font-mono text-slate-300">${pSec}%</span>
+            </div>
+          </td>
+          <td class="py-3 px-4 font-semibold text-blue-400">${pA}%</td>
+          <td class="py-3 px-4 font-semibold text-emerald-400">${pB}%</td>
+          <td class="py-3 px-4 font-mono text-slate-300">${formatNumber(diff)}</td>
+          <td class="py-3 px-4 text-center">${leaderBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterUFTable() {
+      renderUFTable();
+    }
+
+    // Chart.js Setup and Dynamic Updates
+    function initCharts() {
+      Chart.defaults.color = '#94a3b8';
+      Chart.defaults.font.family = 'Inter';
+
+      // 1. Evolution Line Chart
+      const ctxEvolution = document.getElementById('evolutionChart').getContext('2d');
+      chartInstanceEvolution = new Chart(ctxEvolution, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Candidato A (%)',
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.3,
+              data: []
+            },
+            {
+              label: 'Candidato B (%)',
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.3,
+              data: []
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            y: { min: 40, max: 60, grid: { color: 'rgba(51, 65, 85, 0.3)' } },
+            x: { grid: { color: 'rgba(51, 65, 85, 0.3)' } }
+          }
+        }
+      });
+
+      // 2. Distribution Doughnut Chart
+      const ctxDistribution = document.getElementById('distributionChart').getContext('2d');
+      chartInstanceDistribution = new Chart(ctxDistribution, {
+        type: 'doughnut',
+        data: {
+          labels: ['Votos Válidos', 'Votos Nulos', 'Votos em Branco'],
+          datasets: [{
+            data: [100, 0, 0],
+            backgroundColor: ['#3B82F6', '#EF4444', '#F59E0B'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          },
+          cutout: '70%'
+        }
+      });
+
+      // 3. Margin Gap Bar Chart
+      const ctxMargin = document.getElementById('marginChart').getContext('2d');
+      chartInstanceMargin = new Chart(ctxMargin, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Diferença Absoluta (Votos)',
+            backgroundColor: '#FBBF24',
+            borderRadius: 6,
+            data: []
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { grid: { color: 'rgba(51, 65, 85, 0.3)' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    function updateCharts(label, valA, valB, validVotes, nullVotes, blankVotes, diffVotes) {
+      if (!chartInstanceEvolution) return;
+
+      // Evolution Chart (keep max 12 data points)
+      const evLabels = chartInstanceEvolution.data.labels;
+      if (evLabels.length > 12) {
+        evLabels.shift();
+        chartInstanceEvolution.data.datasets[0].data.shift();
+        chartInstanceEvolution.data.datasets[1].data.shift();
+      }
+      evLabels.push(label);
+      chartInstanceEvolution.data.datasets[0].data.push(valA);
+      chartInstanceEvolution.data.datasets[1].data.push(valB);
+      chartInstanceEvolution.update();
+
+      // Distribution Chart
+      chartInstanceDistribution.data.datasets[0].data = [validVotes, nullVotes, blankVotes];
+      chartInstanceDistribution.update();
+
+      // Margin Gap Chart
+      const marginLabels = chartInstanceMargin.data.labels;
+      if (marginLabels.length > 12) {
+        marginLabels.shift();
+        chartInstanceMargin.data.datasets[0].data.shift();
+      }
+      marginLabels.push(label);
+      chartInstanceMargin.data.datasets[0].data.push(diffVotes);
+      chartInstanceMargin.update();
+    }
+
+    // Toggle Technical Drawer/Accordion
+    function toggleApiAccordion() {
+      const content = document.getElementById('api-accordion-content');
+      const arrow = document.getElementById('accordion-arrow');
+
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Utility: Format numbers with Brazilian thousand separators
+    function formatNumber(num) {
+      return new Intl.NumberFormat('pt-BR').format(num || 0);
+    }
+  </script>
+</body>
+</html>
