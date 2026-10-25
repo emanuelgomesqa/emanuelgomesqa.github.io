@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apuração ao vivo · 2º turno 2026 (TSE)</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--tx:#14181f;--mut:#667085;--bd:#e3e6ec;--l:#d62839;--f:#1f6fd1;--ok:#1a9c5b;--w:#c77d0a}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1218;--card:#181c24;--tx:#eef1f6;--mut:#9aa3b2;--bd:#2a303c;--l:#ff5a69;--f:#5b9cff;--ok:#3ccf88;--w:#f0b04a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:14px}
+h1{font-size:20px;margin:0}.sub{color:var(--mut);font-size:13px}
+button{background:var(--tx);color:var(--bg);border:0;border-radius:8px;padding:9px 14px;font:600 14px inherit;cursor:pointer}
+.pill{font-size:12px;padding:3px 9px;border-radius:99px;border:1px solid var(--bd);background:var(--card);color:var(--mut)}
+.ok{color:var(--ok);border-color:var(--ok)}.bad{color:var(--w);border-color:var(--w)}
+.g{display:grid;gap:12px}.two{grid-template-columns:1fr 1fr}.four{grid-template-columns:repeat(4,1fr)}
+@media(max-width:640px){.two{grid-template-columns:1fr}.four{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-top:12px}
+.g .card{margin-top:0}
+.card h2{font-size:12px;margin:0 0 10px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.n{font-weight:700;font-size:18px}.p{font-size:42px;font-weight:800;line-height:1.1;margin:4px 0}.v{color:var(--mut)}
+.duel{height:22px;border-radius:11px;overflow:hidden;display:flex;background:var(--bd)}.duel div{transition:width .6s}
+.prog{height:10px;border-radius:5px;background:var(--bd);overflow:hidden;margin-top:8px}.prog div{height:100%;background:var(--ok);transition:width .6s}
+.k{color:var(--mut);font-size:12px}.x{font-size:24px;font-weight:700}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px;min-width:480px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-size:12px}td.r{text-align:right;font-variant-numeric:tabular-nums}
+.L{color:var(--l);font-weight:700}.F{color:var(--f);font-weight:700}
+footer,details{color:var(--mut);font-size:12px;margin-top:14px}pre{white-space:pre-wrap;word-break:break-all;max-height:260px;overflow:auto}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div><h1>Apuração ao vivo · 2º turno 2026</h1><div class="sub">Presidente · dados oficiais do TSE lidos direto no seu navegador</div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <span class="pill" id="st">conectando…</span><span class="pill" id="cd">60s</span><button id="btn">Atualizar agora</button>
+  </div>
+</header>
+<div id="root"></div>
+<details id="dbg"><summary>Diagnóstico (se algum número não aparecer, copie isto)</summary><pre id="raw"></pre></details>
+<footer>Fonte: TSE (resultados.tse.jus.br). Resultado parcial até a totalização final; só o TSE proclama eleitos. Painel independente, sem vínculo oficial.</footer>
+</main>
+<script>
+var ELEICAO=new URLSearchParams(location.search).get('eleicao')||'6258';
+var BASE='https://resultados.tse.jus.br/oficial/ele2026/'+ELEICAO+'/dados/';
+var UFS='br ac al am ap ba ce df es go ma mg ms mt pa pb pe pi pr rj rn ro rr rs sc se sp to zz'.split(' ');
+var REFRESH=60,left=REFRESH,busy=false;
+var $=function(i){return document.getElementById(i)};
+function num(x){if(x==null||x==='')return null;var s=String(x).trim();if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');var n=parseFloat(s);return isNaN(n)?null:n}
+function fmt(n,d){return n==null?'–':n.toLocaleString('pt-BR',{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
+function pc(n){return n==null?'–':fmt(n,2)+'%'}
+function get(o,keys){for(var i=0;i<keys.length;i++){if(o&&o[keys[i]]!=null)return o[keys[i]]}return null}
+function presidentCands(j){
+  var carg=(j.carg||[]).find(function(c){return String(c.cd)==='1'})||(j.carg||[])[0];
+  if(!carg)return [];
+  var out=[];
+  (carg.agr||[]).forEach(function(agr){
+    (agr.par||[]).forEach(function(par){
+      (par.cand||[]).forEach(function(c){out.push(c)});
+    });
+  });
+  return out;
+}
+function pick(c,key){
+  return c.find(function(x){
+    var nm=String(x.nmu||x.nm||'').toUpperCase(),n=String(x.n||'');
+    return key==='L'?(n==='13'||nm.indexOf('LULA')>-1):(n==='22'||nm.indexOf('BOLSONARO')>-1);
+  });
+}
+function parse(j){
+  var c=presidentCands(j),L=pick(c,'L'),F=pick(c,'F'),s=j.s||{},e=j.e||{},v=j.v||{};
+  var out={
+    L:L&&{p:num(get(L,['pvap','pvapn','pv','p'])),v:num(get(L,['vap','v']))},
+    F:F&&{p:num(get(F,['pvap','pvapn','pv','p'])),v:num(get(F,['vap','v']))}
+  };
+  out.pst=num(get(s,['pst','pstn']));
+  out.secT=num(get(s,['ts']));
+  out.secA=num(get(s,['st','sa']));
+  out.comp=num(get(e,['c']));
+  out.pcomp=num(get(e,['pc','pcn']));
+  out.abs=num(get(e,['a']));
+  out.pabs=num(get(e,['pa','pan']));
+  out.br=num(get(v,['vb']));
+  out.pbr=num(get(v,['pvb','pvbn']));
+  out.nu=num(get(v,['tvn','vn']));
+  out.pnu=num(get(v,['ptvn','ptvnn','pvn']));
+  out.dt=(get(j,['dg','dt'])||'')+(get(j,['hg','ht'])?(' '+get(j,['hg','ht'])):'');
+  return out;
+}
+async function jget(uf){var r=await fetch(BASE+uf+'/'+uf+'-c0001-e'+('000000'+ELEICAO).slice(-6)+'-u.json',{cache:'no-cache'});if(!r.ok)throw new Error(uf+' HTTP '+r.status);return r.json()}
+function stat(k,x,s){return '<div class="card"><div class="k">'+k+'</div><div class="x">'+x+'</div><div class="k">'+(s||'')+'</div></div>'}
+function render(b,states){
+  var Lp=b.L&&b.L.p,Fp=b.F&&b.F.p,ok=Lp!=null&&Fp!=null;
+  var lw=ok&&(Lp+Fp)?Lp/(Lp+Fp)*100:50,lead=!ok?'':(Lp>Fp?'Lula':(Fp>Lp?'Flávio Bolsonaro':'Empate'));
+  var diff=(b.L&&b.F&&b.L.v!=null&&b.F.v!=null)?Math.abs(b.L.v-b.F.v):null;
+  var sp=b.pst!=null?b.pst:(b.secT?b.secA/b.secT*100:null);
+  var h='<div class="g two"><div class="card"><div class="n" style="color:var(--l)">Lula · PT 13</div><div class="p">'+pc(Lp)+'</div><div class="v">'+fmt(b.L&&b.L.v)+' votos</div></div>';
+  h+='<div class="card"><div class="n" style="color:var(--f)">Flávio Bolsonaro · PL 22</div><div class="p">'+pc(Fp)+'</div><div class="v">'+fmt(b.F&&b.F.v)+' votos</div></div></div>';
+  h+='<div class="card"><h2>Disputa nacional (votos válidos)</h2><div class="duel"><div style="width:'+lw+'%;background:var(--l)"></div><div style="width:'+(100-lw)+'%;background:var(--f)"></div></div>';
+  h+='<div class="sub" style="margin-top:8px">'+(lead?'Na frente: <b>'+lead+'</b>'+(diff!=null?' · diferença de '+fmt(diff)+' votos':''):'')+'</div>';
+  h+='<div class="sub" style="margin-top:12px">Seções totalizadas: <b>'+pc(sp)+'</b>'+(b.secT?' ('+fmt(b.secA)+' de '+fmt(b.secT)+')':'')+'</div><div class="prog"><div style="width:'+Math.min(100,sp||0)+'%"></div></div></div>';
+  h+='<div class="g four" style="margin-top:12px">'+stat('Comparecimento',pc(b.pcomp),fmt(b.comp)+' eleitores')+stat('Abstenção',pc(b.pabs),fmt(b.abs)+' eleitores')+stat('Brancos',pc(b.pbr),fmt(b.br)+' votos')+stat('Nulos',pc(b.pnu),fmt(b.nu)+' votos')+'</div>';
+  h+='<div class="card"><h2>Por estado (presidente)</h2><div class="tw"><table><thead><tr><th>UF</th><th class="r">Lula</th><th class="r">Flávio</th><th>Lidera</th><th class="r">Totalizado</th></tr></thead><tbody>';
+  states.forEach(function(s){
+    if(!s.d){h+='<tr><td><b>'+s.uf.toUpperCase()+'</b></td><td colspan="4" class="k">sem dados</td></tr>';return}
+    var l=s.d.L&&s.d.L.p,f=s.d.F&&s.d.F.p,w=(l==null||f==null||(!l&&!f))?'–':(l>f?'<span class="L">Lula</span>':'<span class="F">Flávio</span>');
+    h+='<tr><td><b>'+(s.uf==='zz'?'Exterior':s.uf.toUpperCase())+'</b></td><td class="r">'+pc(l)+'</td><td class="r">'+pc(f)+'</td><td>'+w+'</td><td class="r">'+pc(s.d.pst)+'</td></tr>';
+  });
+  $('root').innerHTML=h+'</tbody></table></div></div>';
+}
+async function load(){
+  if(busy)return;busy=true;$('btn').disabled=true;
+  try{
+    var res=await Promise.all(UFS.map(function(u){return jget(u).then(function(j){return {uf:u,j:j}}).catch(function(e){return {uf:u,err:e}})}));
+    var br=res[0];
+    if(br.err)throw br.err;
+    $('raw').textContent=JSON.stringify(br.j,null,1).slice(0,6000);
+    var b=parse(br.j);
+    var states=res.slice(1).map(function(r){return {uf:r.uf,d:r.j?parse(r.j):null}});
+    render(b,states);
+    $('st').className='pill ok';$('st').textContent='TSE · atualizado '+new Date().toLocaleTimeString('pt-BR');
+    if(b.L==null||b.F==null||b.L.p==null){$('dbg').open=true;$('st').className='pill bad';$('st').textContent='lido, mas formato inesperado — veja diagnóstico'}
+  }catch(e){
+    $('st').className='pill bad';$('st').textContent='sem resposta do TSE ('+e.message+')';
+    $('root').innerHTML='<div class="card">Não consegui ler o TSE agora. Se você abriu este arquivo direto do disco (file://), o navegador pode bloquear a leitura: sirva a página por HTTP (ex.: <code>python3 -m http.server</code> na pasta e abra http://localhost:8000/apuracao-tse-ao-vivo.html) ou hospede em GitHub Pages. Nenhum número é inventado.</div>';
+  }finally{busy=false;$('btn').disabled=false;left=REFRESH}
+}
+$('btn').onclick=load;
+setInterval(function(){left--;if(left<=0){load()}$('cd').textContent='próxima em '+Math.max(left,0)+'s'},1000);
+load();
+</script>
+</body>
+</html>
