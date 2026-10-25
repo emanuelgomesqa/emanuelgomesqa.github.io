@@ -5,52 +5,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apuração ao vivo · 2º turno 2026 (TSE)</title>
 <style>
-:root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--tx:#14181f;--mut:#667085;--bd:#e3e6ec;--l:#d62839;--f:#1f6fd1;--ok:#1a9c5b;--w:#c77d0a}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1218;--card:#181c24;--tx:#eef1f6;--mut:#9aa3b2;--bd:#2a303c;--l:#ff5a69;--f:#5b9cff;--ok:#3ccf88;--w:#f0b04a}}
+:root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--tx:#14181f;--mut:#667085;--bd:#e3e6ec;--l:#d62839;--f:#1f6fd1;--ok:#1a9c5b;--w:#c77d0a;--grid:rgba(102,112,133,.15)}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1218;--card:#181c24;--tx:#eef1f6;--mut:#9aa3b2;--bd:#2a303c;--l:#ff5a69;--f:#5b9cff;--ok:#3ccf88;--w:#f0b04a;--grid:rgba(154,163,178,.12)}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif}
-main{max-width:1000px;margin:0 auto;padding:16px}
-header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:14px}
+main{max-width:1180px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
 h1{font-size:20px;margin:0}.sub{color:var(--mut);font-size:13px}
-button{background:var(--tx);color:var(--bg);border:0;border-radius:8px;padding:9px 14px;font:600 14px inherit;cursor:pointer}
+button,.sel{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;font:600 14px inherit;cursor:pointer}
+button.primary{background:var(--tx);color:var(--bg);border-color:transparent}
 .pill{font-size:12px;padding:3px 9px;border-radius:99px;border:1px solid var(--bd);background:var(--card);color:var(--mut)}
 .ok{color:var(--ok);border-color:var(--ok)}.bad{color:var(--w);border-color:var(--w)}
-.g{display:grid;gap:12px}.two{grid-template-columns:1fr 1fr}.four{grid-template-columns:repeat(4,1fr)}
-@media(max-width:640px){.two{grid-template-columns:1fr}.four{grid-template-columns:1fr 1fr}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.g{display:grid;gap:12px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.three{grid-template-columns:1fr 1fr}}@media(max-width:640px){.two,.three,.four{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-top:12px}
 .g .card{margin-top:0}
 .card h2{font-size:12px;margin:0 0 10px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.card h2 span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--mut)}
 .n{font-weight:700;font-size:18px}.p{font-size:42px;font-weight:800;line-height:1.1;margin:4px 0}.v{color:var(--mut)}
 .duel{height:22px;border-radius:11px;overflow:hidden;display:flex;background:var(--bd)}.duel div{transition:width .6s}
 .prog{height:10px;border-radius:5px;background:var(--bd);overflow:hidden;margin-top:8px}.prog div{height:100%;background:var(--ok);transition:width .6s}
-.k{color:var(--mut);font-size:12px}.x{font-size:24px;font-weight:700}
-.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px;min-width:480px}
-th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-size:12px}td.r{text-align:right;font-variant-numeric:tabular-nums}
+.k{color:var(--mut);font-size:12px}.x{font-size:22px;font-weight:700}
+.ch{width:100%;height:auto;display:block;border-radius:8px;background:var(--bg)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mut);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-size:11px;cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:var(--tx)}th.sorted{color:var(--tx)}td.r{text-align:right;font-variant-numeric:tabular-nums}
 .L{color:var(--l);font-weight:700}.F{color:var(--f);font-weight:700}
+.pos{color:var(--l)}.neg{color:var(--f)}
+.barcell{min-width:100px}.minibar{height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin-top:3px}
+.minibar div{height:100%;transition:width .4s}
 footer,details{color:var(--mut);font-size:12px;margin-top:14px}pre{white-space:pre-wrap;word-break:break-all;max-height:260px;overflow:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);background:var(--bg)}
 </style>
 </head>
 <body>
 <main>
 <header>
-  <div><h1>Apuração ao vivo · 2º turno 2026</h1><div class="sub">Presidente · dados oficiais do TSE lidos direto no seu navegador</div></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <span class="pill" id="st">conectando…</span><span class="pill" id="cd">60s</span><button id="btn">Atualizar agora</button>
+  <div>
+    <h1>Apuração ao vivo · 2º turno 2026</h1>
+    <div class="sub">Presidente · JSON oficial do TSE · histórico e gráficos salvos neste navegador</div>
+    <div class="sub" id="tseMeta"></div>
+  </div>
+  <div class="toolbar" style="margin:0">
+    <span class="pill" id="st">conectando…</span>
+    <span class="pill" id="cd">60s</span>
+    <select class="sel" id="interval" title="Intervalo automático">
+      <option value="30">30 s</option>
+      <option value="60" selected>60 s</option>
+      <option value="120">2 min</option>
+      <option value="300">5 min</option>
+    </select>
+    <button type="button" class="primary" id="btn">Atualizar</button>
+    <button type="button" id="btnHist" title="Apaga gráficos de evolução">Limpar histórico</button>
   </div>
 </header>
 <div id="root"></div>
-<details id="dbg"><summary>Diagnóstico (se algum número não aparecer, copie isto)</summary><pre id="raw"></pre></details>
-<footer>Fonte: TSE (resultados.tse.jus.br). Resultado parcial até a totalização final; só o TSE proclama eleitos. Painel independente, sem vínculo oficial.</footer>
+<details id="dbg"><summary>Diagnóstico (JSON resumido do TSE)</summary><pre id="raw"></pre></details>
+<footer>Fonte: TSE (resultados.tse.jus.br). Parcial até totalização; só o TSE proclama eleitos. Evolução = amostras coletadas enquanto esta página fica aberta (localStorage). Painel independente.</footer>
 </main>
 <script>
 var ELEICAO=new URLSearchParams(location.search).get('eleicao')||'6258';
 var BASE='https://resultados.tse.jus.br/oficial/ele2026/'+ELEICAO+'/dados/';
 var UFS='br ac al am ap ba ce df es go ma mg ms mt pa pb pe pi pr rj rn ro rr rs sc se sp to zz'.split(' ');
+var UF_LABEL={br:'Brasil',zz:'Exterior',ac:'Acre',al:'Alagoas',am:'Amazonas',ap:'Amapá',ba:'Bahia',ce:'Ceará',df:'Distrito Federal',es:'Espírito Santo',go:'Goiás',ma:'Maranhão',mg:'Minas Gerais',ms:'Mato Grosso do Sul',mt:'Mato Grosso',pa:'Pará',pb:'Paraíba',pe:'Pernambuco',pi:'Piauí',pr:'Paraná',rj:'Rio de Janeiro',rn:'Rio Grande do Norte',ro:'Rondônia',rr:'Roraima',rs:'Rio Grande do Sul',sc:'Santa Catarina',se:'Sergipe',sp:'São Paulo',to:'Tocantins'};
+var HKEY='tse-apu-v2-'+ELEICAO;
 var REFRESH=60,left=REFRESH,busy=false;
+var history=[],stateHist={},lastBr=null,lastStates=null;
+var sortCol='margin',sortDir=-1;
 var $=function(i){return document.getElementById(i)};
+
 function num(x){if(x==null||x==='')return null;var s=String(x).trim();if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');var n=parseFloat(s);return isNaN(n)?null:n}
 function fmt(n,d){return n==null?'–':n.toLocaleString('pt-BR',{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
 function pc(n){return n==null?'–':fmt(n,2)+'%'}
+function pcd(n){if(n==null)return '–';var s=(n>=0?'+':'')+fmt(n,2)+ ' pp';return s}
 function get(o,keys){for(var i=0;i<keys.length;i++){if(o&&o[keys[i]]!=null)return o[keys[i]]}return null}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+
+function loadHist(){
+  try{history=JSON.parse(localStorage.getItem(HKEY)||'[]')}catch(e){history=[]}
+  try{stateHist=JSON.parse(localStorage.getItem(HKEY+'-uf')||'{}')}catch(e){stateHist={}}
+}
+function saveHist(){
+  try{localStorage.setItem(HKEY,JSON.stringify(history.slice(-500)))}catch(e){}
+  try{localStorage.setItem(HKEY+'-uf',JSON.stringify(stateHist))}catch(e){}
+}
+function clearHist(){history=[];stateHist={};saveHist();if(lastBr)render(lastBr,lastStates)}
+
 function presidentCands(j){
   var carg=(j.carg||[]).find(function(c){return String(c.cd)==='1'})||(j.carg||[])[0];
   if(!carg)return [];
@@ -85,49 +128,247 @@ function parse(j){
   out.pbr=num(get(v,['pvb','pvbn']));
   out.nu=num(get(v,['tvn','vn']));
   out.pnu=num(get(v,['ptvn','ptvnn','pvn']));
+  out.vvc=num(get(v,['vvc','vv']));
+  out.pvvc=num(get(v,['pvvc','pvvcn']));
+  out.vtot=num(get(v,['tv']));
+  out.eleTot=num(get(e,['te']));
+  out.eleAp=num(get(e,['est','esa']));
+  out.peleAp=num(get(e,['pest','pesa']));
+  out.idg=get(j,['idg']);
   out.dt=(get(j,['dg','dt'])||'')+(get(j,['hg','ht'])?(' '+get(j,['hg','ht'])):'');
+  if(out.L&&out.F&&out.L.v!=null&&out.F.v!=null){out.diffV=out.L.v-out.F.v;out.diffP=(out.L.p!=null&&out.F.p!=null)?out.L.p-out.F.p:null}
   return out;
 }
-async function jget(uf){var r=await fetch(BASE+uf+'/'+uf+'-c0001-e'+('000000'+ELEICAO).slice(-6)+'-u.json',{cache:'no-cache'});if(!r.ok)throw new Error(uf+' HTTP '+r.status);return r.json()}
-function stat(k,x,s){return '<div class="card"><div class="k">'+k+'</div><div class="x">'+x+'</div><div class="k">'+(s||'')+'</div></div>'}
-function render(b,states){
-  var Lp=b.L&&b.L.p,Fp=b.F&&b.F.p,ok=Lp!=null&&Fp!=null;
-  var lw=ok&&(Lp+Fp)?Lp/(Lp+Fp)*100:50,lead=!ok?'':(Lp>Fp?'Lula':(Fp>Lp?'Flávio Bolsonaro':'Empate'));
-  var diff=(b.L&&b.F&&b.L.v!=null&&b.F.v!=null)?Math.abs(b.L.v-b.F.v):null;
-  var sp=b.pst!=null?b.pst:(b.secT?b.secA/b.secT*100:null);
-  var h='<div class="g two"><div class="card"><div class="n" style="color:var(--l)">Lula · PT 13</div><div class="p">'+pc(Lp)+'</div><div class="v">'+fmt(b.L&&b.L.v)+' votos</div></div>';
-  h+='<div class="card"><div class="n" style="color:var(--f)">Flávio Bolsonaro · PL 22</div><div class="p">'+pc(Fp)+'</div><div class="v">'+fmt(b.F&&b.F.v)+' votos</div></div></div>';
-  h+='<div class="card"><h2>Disputa nacional (votos válidos)</h2><div class="duel"><div style="width:'+lw+'%;background:var(--l)"></div><div style="width:'+(100-lw)+'%;background:var(--f)"></div></div>';
-  h+='<div class="sub" style="margin-top:8px">'+(lead?'Na frente: <b>'+lead+'</b>'+(diff!=null?' · diferença de '+fmt(diff)+' votos':''):'')+'</div>';
-  h+='<div class="sub" style="margin-top:12px">Seções totalizadas: <b>'+pc(sp)+'</b>'+(b.secT?' ('+fmt(b.secA)+' de '+fmt(b.secT)+')':'')+'</div><div class="prog"><div style="width:'+Math.min(100,sp||0)+'%"></div></div></div>';
-  h+='<div class="g four" style="margin-top:12px">'+stat('Comparecimento',pc(b.pcomp),fmt(b.comp)+' eleitores')+stat('Abstenção',pc(b.pabs),fmt(b.abs)+' eleitores')+stat('Brancos',pc(b.pbr),fmt(b.br)+' votos')+stat('Nulos',pc(b.pnu),fmt(b.nu)+' votos')+'</div>';
-  h+='<div class="card"><h2>Por estado (presidente)</h2><div class="tw"><table><thead><tr><th>UF</th><th class="r">Lula</th><th class="r">Flávio</th><th>Lidera</th><th class="r">Totalizado</th></tr></thead><tbody>';
-  states.forEach(function(s){
-    if(!s.d){h+='<tr><td><b>'+s.uf.toUpperCase()+'</b></td><td colspan="4" class="k">sem dados</td></tr>';return}
-    var l=s.d.L&&s.d.L.p,f=s.d.F&&s.d.F.p,w=(l==null||f==null||(!l&&!f))?'–':(l>f?'<span class="L">Lula</span>':'<span class="F">Flávio</span>');
-    h+='<tr><td><b>'+(s.uf==='zz'?'Exterior':s.uf.toUpperCase())+'</b></td><td class="r">'+pc(l)+'</td><td class="r">'+pc(f)+'</td><td>'+w+'</td><td class="r">'+pc(s.d.pst)+'</td></tr>';
+
+function pushHist(b,states){
+  if(!b||!b.L||b.L.p==null||!b.F||b.F.p==null)return;
+  var last=history.length?history[history.length-1]:null;
+  if(!last||last.idg!==b.idg){
+    history.push({t:Date.now(),idg:b.idg||String(Date.now()),pst:b.pst,lp:b.L.p,fp:b.F.p,lv:b.L.v,fv:b.F.v,dv:b.diffV,dp:b.diffP});
+    if(history.length>500)history=history.slice(-500);
+  }
+  states.forEach(function(st){
+    if(!st.d||st.uf==='br'||st.d.L==null||st.d.F==null||st.d.L.p==null)return;
+    var uf=st.uf,arr=stateHist[uf]||[];
+    var lid=b.idg||'x';
+    if(arr.length&&arr[arr.length-1].idg===lid)return;
+    arr.push({t:Date.now(),idg:lid,lp:st.d.L.p,fp:st.d.F.p,m:st.d.L.p-st.d.F.p,pst:st.d.pst});
+    if(arr.length>80)arr=arr.slice(-80);
+    stateHist[uf]=arr;
   });
-  $('root').innerHTML=h+'</tbody></table></div></div>';
+  saveHist();
 }
+
+async function jget(uf){
+  var r=await fetch(BASE+uf+'/'+uf+'-c0001-e'+('000000'+ELEICAO).slice(-6)+'-u.json',{cache:'no-cache'});
+  if(!r.ok)throw new Error(uf.toUpperCase()+' HTTP '+r.status);
+  return r.json();
+}
+
+function stat(k,x,s){return '<div class="card"><div class="k">'+k+'</div><div class="x">'+x+'</div><div class="k">'+(s||'')+'</div></div>'}
+
+function setupCanvas(c,w,h){
+  var dpr=window.devicePixelRatio||1;
+  c.width=Math.floor(w*dpr);c.height=Math.floor(h*dpr);
+  c.style.width=w+'px';c.style.height=h+'px';
+  var ctx=c.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return ctx;
+}
+
+function drawLineChart(canvasId,pts,keys,colors,opts){
+  var c=$(canvasId);if(!c||!pts||pts.length<2)return;
+  var W=c.parentElement.clientWidth-4,H=opts.height||220;
+  var ctx=setupCanvas(c,W,H);
+  var pad={l:44,r:16,t:14,b:28};
+  var plotW=W-pad.l-pad.r,plotH=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=css('--tx');ctx.strokeStyle=css('--grid');ctx.lineWidth=1;
+  var all=[];
+  pts.forEach(function(p){keys.forEach(function(k){if(p[k]!=null)all.push(p[k])})});
+  var yMin=opts.yMin!=null?opts.yMin:Math.min.apply(null,all.length?all.concat([opts.floor||0]):[0]);
+  var yMax=opts.yMax!=null?opts.yMax:Math.max.apply(null,all.length?all.concat([100]):[100]);
+  if(yMax-yMin<0.5){yMin-=1;yMax+=1}
+  function xAt(i){return pad.l+(i/(pts.length-1))*plotW}
+  function yAt(v){return pad.t+plotH-((v-yMin)/(yMax-yMin))*plotH}
+  for(var g=0;g<=4;g++){
+    var gy=pad.t+(g/4)*plotH;
+    ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(W-pad.r,gy);ctx.stroke();
+    var val=yMax-(g/4)*(yMax-yMin);
+    ctx.fillStyle=css('--mut');ctx.font='10px system-ui';ctx.textAlign='right';
+    ctx.fillText(val.toFixed(opts.dec!=null?opts.dec:1),pad.l-6,gy+3);
+  }
+  keys.forEach(function(key,ki){
+    ctx.strokeStyle=colors[ki];ctx.lineWidth=2;ctx.beginPath();
+    var started=false;
+    pts.forEach(function(p,i){
+      if(p[key]==null)return;
+      var x=xAt(i),y=yAt(p[key]);
+      if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  });
+  ctx.fillStyle=css('--mut');ctx.font='10px system-ui';ctx.textAlign='center';
+  var i0=0,i1=pts.length-1;
+  ctx.fillText(new Date(pts[i0].t).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),xAt(i0),H-8);
+  ctx.fillText(new Date(pts[i1].t).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),xAt(i1),H-8);
+}
+
+function drawBarChart(canvasId,rows){
+  var c=$(canvasId);if(!c||!rows.length)return;
+  var rowH=22, H=Math.max(220,rows.length*rowH+40);
+  var W=c.parentElement.clientWidth-4;
+  var ctx=setupCanvas(c,W,H);
+  ctx.clearRect(0,0,W,H);
+  var maxM=Math.max.apply(null,rows.map(function(r){return Math.abs(r.m||0)}).concat([0.5]));
+  var padL=72,padR=52;
+  rows.forEach(function(r,i){
+    var y=16+i*rowH;
+    ctx.fillStyle=css('--mut');ctx.font='11px system-ui';ctx.textAlign='right';
+    ctx.fillText(r.label,padL-8,y+12);
+    var cx=padL+(W-padL-padR)/2;
+    var half=(W-padL-padR)/2*0.92;
+    var w=(r.m/maxM)*half;
+    ctx.fillStyle=r.m>=0?css('--l'):css('--f');
+    if(w>=0)ctx.fillRect(cx,y+4,w,14);else ctx.fillRect(cx+w,y+4,-w,14);
+    ctx.fillStyle=css('--tx');ctx.textAlign='left';
+    ctx.fillText(pcd(r.m),W-padR+4,y+12);
+  });
+  ctx.strokeStyle=css('--bd');ctx.beginPath();ctx.moveTo(padL+(W-padL-padR)/2,8);ctx.lineTo(padL+(W-padL-padR)/2,H-8);ctx.stroke();
+}
+
+function drawStateSpark(canvasId,uf){
+  var pts=stateHist[uf]||[];
+  var c=$(canvasId);if(!c)return;
+  if(pts.length<2){c.style.display='none';return}
+  c.style.display='block';
+  var W=120,H=36,ctx=setupCanvas(c,W,H);
+  ctx.clearRect(0,0,W,H);
+  var vals=pts.map(function(p){return p.m});
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+  if(mx-mn<0.2){mn-=0.5;mx+=0.5}
+  ctx.strokeStyle=css('--mut');ctx.lineWidth=1.5;ctx.beginPath();
+  pts.forEach(function(p,i){
+    var x=(i/(pts.length-1))*(W-8)+4;
+    var y=4+(H-8)-((p.m-mn)/(mx-mn))*(H-8);
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
+function stateRows(states){
+  return states.filter(function(s){return s.uf!=='br'&&s.d}).map(function(s){
+    var d=s.d,l=d.L&&d.L.p,f=d.F&&d.F.p;
+    var m=(l!=null&&f!=null)?l-f:null;
+    var dv=(d.L&&d.F&&d.L.v!=null&&d.F.v!=null)?d.L.v-d.F.v:null;
+    return {uf:s.uf,label:UF_LABEL[s.uf]||s.uf.toUpperCase(),l:l,f:f,m:m,dv:dv,pst:d.pst,lv:d.L&&d.L.v,fv:d.F&&d.F.v,d:d};
+  });
+}
+function sortRows(rows){
+  var col=sortCol,dir=sortDir;
+  rows.sort(function(a,b){
+    var va=a[col],vb=b[col];
+    if(col==='uf'){va=a.uf;vb=b.uf}
+    if(va==null&&vb==null)return 0;
+    if(va==null)return 1;
+    if(vb==null)return -1;
+    if(typeof va==='string')return dir*va.localeCompare(vb);
+    return dir*(va-vb);
+  });
+  return rows;
+}
+
+function render(b,states){
+  lastBr=b;lastStates=states;
+  var Lp=b.L&&b.L.p,Fp=b.F&&b.F.p,ok=Lp!=null&&Fp!=null;
+  var lw=ok&&(Lp+Fp)?Lp/(Lp+Fp)*100:50;
+  var lead=!ok?'':(Lp>Fp?'Lula':(Fp>Lp?'Flávio Bolsonaro':'Empate'));
+  var diff=b.diffV!=null?Math.abs(b.diffV):null;
+  var sp=b.pst!=null?b.pst:(b.secT?b.secA/b.secT*100:null);
+  var rows=sortRows(stateRows(states));
+  var lulaUF=rows.filter(function(r){return r.m>0}).length;
+  var flavUF=rows.filter(function(r){return r.m<0}).length;
+  var empUF=rows.filter(function(r){return r.m===0}).length;
+
+  var h='';
+  h+='<div class="g two"><div class="card"><div class="n" style="color:var(--l)">Lula · PT 13</div><div class="p">'+pc(Lp)+'</div><div class="v">'+fmt(b.L&&b.L.v)+' votos válidos</div></div>';
+  h+='<div class="card"><div class="n" style="color:var(--f)">Flávio Bolsonaro · PL 22</div><div class="p">'+pc(Fp)+'</div><div class="v">'+fmt(b.F&&b.F.v)+' votos válidos</div></div></div>';
+
+  h+='<div class="card"><h2>Disputa nacional</h2><div class="duel"><div style="width:'+lw+'%;background:var(--l)"></div><div style="width:'+(100-lw)+'%;background:var(--f)"></div></div>';
+  h+='<div class="sub" style="margin-top:8px">'+(lead?(Lp===Fp?'Empate técnico':'Na frente: <b>'+lead+'</b>'+(b.diffP!=null?' · <span class="'+(b.diffP>=0?'pos':'neg')+'">'+pcd(b.diffP)+'</span>':'')):'')+(diff!=null?' · diferença absoluta de <b>'+fmt(diff)+'</b> votos':'')+'</div>';
+  h+='<div class="sub" style="margin-top:10px">Seções totalizadas: <b>'+pc(sp)+'</b>'+(b.secT?' ('+fmt(b.secA)+' / '+fmt(b.secT)+')':'')+' · Eleitorado apurado: <b>'+pc(b.peleAp)+'</b>'+(b.eleTot?' ('+fmt(b.eleAp)+' / '+fmt(b.eleTot)+')':'')+'</div><div class="prog"><div style="width:'+Math.min(100,sp||0)+'%"></div></div></div>';
+
+  h+='<div class="g four">'+stat('Votos válidos',fmt(b.vvc),pc(b.pvvc)+' sobre votos')+stat('Comparecimento',pc(b.pcomp),fmt(b.comp)+' eleitores')+stat('Abstenção',pc(b.pabs),fmt(b.abs)+' eleitores')+stat('Brancos / Nulos',pc(b.pbr)+' / '+pc(b.pnu),fmt(b.br)+' · '+fmt(b.nu))+'</div>';
+
+  h+='<div class="g three"><div class="card"><h2>Evolução · % votos válidos <span>('+history.length+' amostras)</span></h2><canvas class="ch" id="cNat" height="220"></canvas><div class="legend"><span><i style="background:var(--l)"></i>Lula</span><span><i style="background:var(--f)"></i>Flávio</span></div></div>';
+  h+='<div class="card"><h2>Vantagem Lula − Flávio <span>(p.p. e votos)</span></h2><canvas class="ch" id="cDiff" height="220"></canvas></div>';
+  h+='<div class="card"><h2>Andamento da apuração</h2><canvas class="ch" id="cPst" height="220"></canvas><div class="legend"><span><i style="background:var(--ok)"></i>% seções totalizadas (BR)</span></div></div></div>';
+
+  h+='<div class="card"><h2>Vantagem por estado <span>(Lula − Flávio, p.p. · clique na UF na tabela para ver mini evolução)</span></h2><canvas class="ch" id="cStates" height="320"></canvas>';
+  h+='<div class="chips"><span class="chip"><span class="L">'+lulaUF+'</span> UFs liderando Lula</span><span class="chip"><span class="F">'+flavUF+'</span> UFs liderando Flávio</span>'+(empUF?'<span class="chip">'+empUF+' empate</span>':'')+'</div></div>';
+
+  h+='<div class="card"><h2>Tabela por UF</h2><div class="tw"><table id="tbl"><thead><tr>';
+  var cols=[{k:'uf',l:'UF'},{k:'l',l:'Lula %',r:1},{k:'f',l:'Flávio %',r:1},{k:'m',l:'Vantagem pp',r:1},{k:'dv',l:'Dif. votos',r:1},{k:'pst',l:'Apurado %',r:1}];
+  cols.forEach(function(c){
+    var cl=(sortCol===c.k?' sorted':'')+(c.r?' r':'');
+    h+='<th class="'+cl.trim()+'" data-sort="'+c.k+'">'+c.l+(sortCol===c.k?(sortDir>0?' ▲':' ▼'):'')+'</th>';
+  });
+  h+='<th>Evolução UF</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    var w=r.m==null?'–':(r.m>0?'<span class="L">Lula</span>':(r.m<0?'<span class="F">Flávio</span>':'Empate'));
+    var bar=r.m==null?'':('<div class="minibar"><div style="width:'+Math.min(100,Math.abs(r.m)*5)+'%;background:'+(r.m>=0?'var(--l)':'var(--f)')+'"></div></div>');
+    h+='<tr data-uf="'+r.uf+'"><td><b>'+r.label+'</b></td><td class="r">'+pc(r.l)+'</td><td class="r">'+pc(r.f)+'</td><td class="r '+(r.m>=0?'pos':'neg')+'">'+pcd(r.m)+bar+'</td><td class="r '+(r.dv>=0?'pos':'neg')+'">'+fmt(r.dv)+'</td><td class="r">'+pc(r.pst)+'</td><td class="barcell"><canvas class="ch" id="sp-'+r.uf+'" width="120" height="36"></canvas></td></tr>';
+  });
+  h+='</tbody></table></div></div>';
+
+  $('root').innerHTML=h;
+  $('tseMeta').textContent=b.dt?('Última boletim TSE: '+b.dt+(b.idg?' · id '+b.idg:'')):'';
+
+  if(history.length>=2){
+    drawLineChart('cNat',history,['lp','fp'],[css('--l'),css('--f')],{yMin:45,yMax:55,height:220,dec:2});
+    drawLineChart('cDiff',history,['dp'],[css('--l')],{height:220,dec:2});
+    drawLineChart('cPst',history,['pst'],[css('--ok')],{yMin:0,yMax:100,height:220,dec:0});
+  }
+  var barRows=rows.slice().sort(function(a,b){return (b.m||0)-(a.m||0)});
+  drawBarChart('cStates',barRows);
+
+  rows.forEach(function(r){drawStateSpark('sp-'+r.uf,r.uf)});
+
+  $('tbl').querySelectorAll('th[data-sort]').forEach(function(th){
+    th.onclick=function(){
+      var k=th.getAttribute('data-sort');
+      if(sortCol===k)sortDir=-sortDir;else{sortCol=k;sortDir=k==='uf'?1:-1}
+      render(b,states);
+    };
+  });
+}
+
 async function load(){
   if(busy)return;busy=true;$('btn').disabled=true;
   try{
     var res=await Promise.all(UFS.map(function(u){return jget(u).then(function(j){return {uf:u,j:j}}).catch(function(e){return {uf:u,err:e}})}));
-    var br=res[0];
-    if(br.err)throw br.err;
-    $('raw').textContent=JSON.stringify(br.j,null,1).slice(0,6000);
+    var br=res.find(function(r){return r.uf==='br'});
+    if(!br||br.err)throw(br&&br.err)||new Error('BR indisponível');
+    $('raw').textContent=JSON.stringify(br.j,null,1).slice(0,8000);
     var b=parse(br.j);
-    var states=res.slice(1).map(function(r){return {uf:r.uf,d:r.j?parse(r.j):null}});
+    var states=res.map(function(r){return {uf:r.uf,d:(r.j&&!r.err)?parse(r.j):null,err:r.err}});
+    pushHist(b,states);
     render(b,states);
-    $('st').className='pill ok';$('st').textContent='TSE · atualizado '+new Date().toLocaleTimeString('pt-BR');
-    if(b.L==null||b.F==null||b.L.p==null){$('dbg').open=true;$('st').className='pill bad';$('st').textContent='lido, mas formato inesperado — veja diagnóstico'}
+    $('st').className='pill ok';
+    $('st').textContent='TSE · '+new Date().toLocaleTimeString('pt-BR');
+    if(!b.L||!b.F||b.L.p==null){$('dbg').open=true;$('st').className='pill bad';$('st').textContent='formato inesperado — diagnóstico'}
   }catch(e){
-    $('st').className='pill bad';$('st').textContent='sem resposta do TSE ('+e.message+')';
-    $('root').innerHTML='<div class="card">Não consegui ler o TSE agora. Se você abriu este arquivo direto do disco (file://), o navegador pode bloquear a leitura: sirva a página por HTTP (ex.: <code>python3 -m http.server</code> na pasta e abra http://localhost:8000/apuracao-tse-ao-vivo.html) ou hospede em GitHub Pages. Nenhum número é inventado.</div>';
+    $('st').className='pill bad';$('st').textContent='erro: '+e.message;
+    if(!lastBr)$('root').innerHTML='<div class="card">Sem resposta do TSE. Sirva por HTTP (<code>python3 -m http.server</code>) — <code>file://</code> costuma bloquear fetch. Nada é inventado.</div>';
   }finally{busy=false;$('btn').disabled=false;left=REFRESH}
 }
+
+loadHist();
 $('btn').onclick=load;
-setInterval(function(){left--;if(left<=0){load()}$('cd').textContent='próxima em '+Math.max(left,0)+'s'},1000);
+$('btnHist').onclick=function(){if(confirm('Apagar histórico local de gráficos?'))clearHist()};
+$('interval').onchange=function(){REFRESH=+this.value;left=REFRESH};
+setInterval(function(){left--;if(left<=0)load();$('cd').textContent='próx. '+Math.max(left,0)+'s'},1000);
+window.addEventListener('resize',function(){if(lastBr)render(lastBr,lastStates)});
 load();
 </script>
 </body>
