@@ -67,15 +67,30 @@ footer,details{color:var(--mut);font-size:12px;margin-top:14px}pre{white-space:p
 <footer>Fonte: TSE (resultados.tse.jus.br). Parcial até totalização; só o TSE proclama eleitos. Evolução = amostras coletadas enquanto esta página fica aberta (localStorage). Painel independente.</footer>
 </main>
 <script>
-var ELEICAO=new URLSearchParams(location.search).get('eleicao')||'6258';
+var QS=new URLSearchParams(location.search);
+var ELEICAO=QS.get('eleicao')||'6258';
 var BASE='https://resultados.tse.jus.br/oficial/ele2026/'+ELEICAO+'/dados/';
+var HOST=location.hostname||'';
+var IS_PAGES=/\.github\.io$/i.test(HOST)||HOST==='github.com';
+var FONT=QS.get('fonte');
 var UFS='br ac al am ap ba ce df es go ma mg ms mt pa pb pe pi pr rj rn ro rr rs sc se sp to zz'.split(' ');
 var UF_LABEL={br:'Brasil',zz:'Exterior',ac:'Acre',al:'Alagoas',am:'Amazonas',ap:'Amapá',ba:'Bahia',ce:'Ceará',df:'Distrito Federal',es:'Espírito Santo',go:'Goiás',ma:'Maranhão',mg:'Minas Gerais',ms:'Mato Grosso do Sul',mt:'Mato Grosso',pa:'Pará',pb:'Paraíba',pe:'Pernambuco',pi:'Piauí',pr:'Paraná',rj:'Rio de Janeiro',rn:'Rio Grande do Norte',ro:'Rondônia',rr:'Roraima',rs:'Rio Grande do Sul',sc:'Santa Catarina',se:'Sergipe',sp:'São Paulo',to:'Tocantins'};
 var HKEY='tse-apu-v2-'+ELEICAO;
 var REFRESH=60,left=REFRESH,busy=false;
 var history=[],stateHist={},lastBr=null,lastStates=null;
-var sortCol='margin',sortDir=-1;
+var sortCol='m',sortDir=-1,fetchMode='';
 var $=function(i){return document.getElementById(i)};
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function pageDir(){var p=location.pathname.replace(/\/[^/]*$/,'/');return p||'/'}
+function tseRemoteUrl(uf){return BASE+uf+'/'+uf+'-c0001-e'+('000000'+ELEICAO).slice(-6)+'-u.json'}
+function mirrorUrl(uf){return pageDir()+'data/'+ELEICAO+'/'+uf+'.json'}
+function fetchOrder(){
+  var pref=FONT||(IS_PAGES?'espelho':'auto');
+  if(pref==='direto')return ['remote'];
+  if(pref==='espelho')return ['mirror','remote'];
+  if(IS_PAGES)return ['mirror','remote'];
+  return ['remote','mirror'];
+}
 
 function num(x){if(x==null||x==='')return null;var s=String(x).trim();if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');var n=parseFloat(s);return isNaN(n)?null:n}
 function fmt(n,d){return n==null?'–':n.toLocaleString('pt-BR',{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
@@ -160,9 +175,17 @@ function pushHist(b,states){
 }
 
 async function jget(uf){
-  var r=await fetch(BASE+uf+'/'+uf+'-c0001-e'+('000000'+ELEICAO).slice(-6)+'-u.json',{cache:'no-cache'});
-  if(!r.ok)throw new Error(uf.toUpperCase()+' HTTP '+r.status);
-  return r.json();
+  var order=fetchOrder(),err;
+  for(var i=0;i<order.length;i++){
+    var url=order[i]==='mirror'?mirrorUrl(uf):tseRemoteUrl(uf);
+    try{
+      var r=await fetch(url,{cache:'no-cache'});
+      if(!r.ok)throw new Error(uf.toUpperCase()+' HTTP '+r.status);
+      fetchMode=order[i]==='mirror'?'espelho no GitHub Pages':'TSE direto';
+      return r.json();
+    }catch(e){err=e}
+  }
+  throw err||new Error(uf.toUpperCase()+' indisponível');
 }
 
 function stat(k,x,s){return '<div class="card"><div class="k">'+k+'</div><div class="x">'+x+'</div><div class="k">'+(s||'')+'</div></div>'}
@@ -355,11 +378,14 @@ async function load(){
     pushHist(b,states);
     render(b,states);
     $('st').className='pill ok';
-    $('st').textContent='TSE · '+new Date().toLocaleTimeString('pt-BR');
+    $('st').textContent=(fetchMode==='espelho no GitHub Pages'?'Espelho':'TSE')+' · '+new Date().toLocaleTimeString('pt-BR');
     if(!b.L||!b.F||b.L.p==null){$('dbg').open=true;$('st').className='pill bad';$('st').textContent='formato inesperado — diagnóstico'}
   }catch(e){
     $('st').className='pill bad';$('st').textContent='erro: '+e.message;
-    if(!lastBr)$('root').innerHTML='<div class="card">Sem resposta do TSE. Sirva por HTTP (<code>python3 -m http.server</code>) — <code>file://</code> costuma bloquear fetch. Nada é inventado.</div>';
+    if(!lastBr){
+      var gh=IS_PAGES?('<p>No <strong>GitHub Pages</strong> o site do TSE devolve <strong>403</strong> para requisições do navegador (bloqueio cross-origin). Solução: publique a pasta <code>data/'+esc(ELEICAO)+'/</code> no mesmo repositório (JSON por UF) e ative o workflow <code>.github/workflows/atualizar-apuracao-tse.yml</code> para atualizar a cada 2 minutos. Forçar espelho: <code>?fonte=espelho</code>.</p>'):('<p>Localmente, use <code>python3 -m http.server</code> na pasta do projeto (não abra como <code>file://</code>).</p>');
+      $('root').innerHTML='<div class="card"><p><strong>Não foi possível carregar os dados.</strong></p>'+gh+'<p class="k">Detalhe: '+esc(e.message)+'</p></div>';
+    }
   }finally{busy=false;$('btn').disabled=false;left=REFRESH}
 }
 
