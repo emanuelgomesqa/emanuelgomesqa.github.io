@@ -1,948 +1,390 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emanuel Gomes</title>
+  <title>Emanuel Gomes | Sr. Quality Assurance</title>
+  <meta name="description" content="Emanuel Gomes, Sr. QA em João Pessoa. Shift-left, automação de testes E2E e de API, performance com k6 e qualidade como cultura do time.">
+  <meta name="theme-color" content="#15203A">
 
-  <!--
-    - favicon
-  -->
-  <link rel="shortcut icon" href="./assets/images/qa.jpg" type="image/x-icon">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Emanuel Gomes | Sr. Quality Assurance">
+  <meta property="og:description" content="Qualidade não é uma fase. É como o time trabalha.">
+  <meta property="og:url" content="https://emanuelgomesqa.github.io/">
+  <meta property="og:image" content="https://emanuelgomesqa.github.io/assets/images/me/me.png">
 
-  <!--
-    - custom css link
-  -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" href="./assets/images/qa.jpg" type="image/jpeg">
 
-  <!--
-    - google font link
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <script>
+    // Aplica o tema salvo antes da pintura para evitar flash
+    try {
+      var t = localStorage.getItem('theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
 </head>
 
 <body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-  <!--
-    - #MAIN
-  -->
+  <header class="topbar" data-topbar>
+    <div class="wrap topbar-inner">
+      <a href="#inicio" class="brand" aria-label="Emanuel Gomes, início">
+        <span class="brand-mark" aria-hidden="true">EG</span>
+        <span class="brand-name">Emanuel Gomes</span>
+      </a>
 
-  <main>
-
-    <!--
-      - #SIDEBAR
-    -->
-
-    <aside class="sidebar" data-sidebar>
-
-      <div class="sidebar-info">
-
-        <figure class="avatar-box">
-          <img id="avatar-me-perfil" src="./assets/images/me/me.png" alt="Emanuel Gomes" width="80">
-        </figure>
-
-        <div class="info-content">
-          <h1 class="name" title="Emanuel Gomes">Emanuel Gomes</h1>
-
-          <p class="title">Analista de Testes/QA</p>
-        </div>
-
-        <button class="info_more-btn" data-sidebar-btn>
-          <span>Meus Contatos</span>
-
-          <ion-icon name="chevron-down"></ion-icon>
-        </button>
-
-      </div>
-
-      <div class="sidebar-info_more">
-
-        <div class="separator"></div>
-
-        <ul class="contacts-list">
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="mail-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Email</p>
-
-              <a href="mailto:emanuelgomesqa@gmail.com" class="contact-link">emanuelgomesqa@gmail.com</a>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="phone-portrait-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Telefone</p>
-
-              <a href="tel:+5583998558560" class="contact-link">+55 (83) 99855-8560</a>
-            </div>
-
-          </li>
-
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="location-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Location</p>
-
-              <address>João Pessoa, Paraíba, BRA</address>
-            </div>
-
-          </li>
-
+      <nav class="nav" aria-label="Seções">
+        <ul class="nav-list" data-nav-list id="nav-list">
+          <li><a href="#abordagem">Abordagem</a></li>
+          <li><a href="#trajetoria">Trajetória</a></li>
+          <li><a href="#stack">Stack</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
         </ul>
-
-        <div class="separator"></div>
-
-        <ul class="social-list">
-
-          <li class="social-item">
-            <a href="https://medium.com/@emanuelgomesqa" target="_blank" class="social-link">
-              <ion-icon name="logo-medium"></ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="https://www.linkedin.com/in/emanuelgomesqa/" target="_blank" class="social-link">
-              <ion-icon name="logo-linkedin"></ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="https://github.com/emanuelgomesqa" target="_blank" class="social-link">
-              <ion-icon name="logo-github"></ion-icon>
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-    </aside>
-
-
-
-
-
-    <!--
-      - #main-content
-    -->
-
-    <div class="main-content">
-
-      <!--
-        - #NAVBAR
-      -->
-
-      <nav class="navbar">
-
-        <ul class="navbar-list">
-
-          <li class="navbar-item">
-            <button class="navbar-link  active" data-nav-link>Sobre</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Experiência</button>
-          </li>
-
-          <!--<li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Blog</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Contact</button>
-          </li>-->
-
-        </ul>
-
       </nav>
 
-
-
-
-
-      <!--
-        - #ABOUT
-      -->
-
-      <article class="sobre  active" data-page="sobre">
-
-        <header>
-          <h2 class="h2 article-title">Sobre</h2>
-        </header>
-
-        <section class="about-text">
-          <p>
-            Sou QA Engineer com 3 anos de experiência em teste de software
-          </p>
-
-          <p>
-            Ferramentas que utilizei: <br>
-            Linguagens que utilizei: <br>
-            Outras ferramentas: <br>
-            Metodologias Agéis:
-          </p>
-        </section>
-
-
-        <!--
-          - clients
-        -->
-
-        <section class="clients">
-
-          <h3 class="h3 clients-title">Certificações</h3>
-
-          <ul class="clients-list has-scrollbar">
-
-            <li class="clients-item">
-              <a href="https://www.credly.com/badges/642530fa-612b-498c-b198-c5fa1623cdd3/public_url" target="_blank">
-                <img src="./assets/images/certifications/lgpdf.png" alt="client logo">
-              </a>
-            </li>
-
-            <li class="clients-item">
-              <a href="https://www.credly.com/badges/c1ba4d9c-a489-4efa-a27c-06b3270c98a1/public_url" target="_blank">
-                <img src="./assets/images/certifications/sfpc.png" alt="client logo">
-              </a>
-            </li>
-
-            <li class="clients-item">
-              <a href="https://www.credly.com/badges/c5ff1e16-0963-44e2-a10f-7e51a1af3e81/public_url" target="_blank">
-                <img src="./assets/images/certifications/rwpc.png" alt="client logo">
-              </a>
-            </li>
-
-            <li class="clients-item">
-              <a href="https://github.com/emanuelgomesqa/emanuelgomesqa.github.io/blob/main/licenses/six_sigma_yellow_belt.pdf" target="_blank">
-                <img src="./assets/images/certifications/yellow-belt.png" alt="client logo">
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #RESUME
-      -->
-
-      <article class="experiência" data-page="experiência">
-
-        <header>
-          <h2 class="h2 article-title">Experiência</h2>
-        </header>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Acadêmica</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Pontifícia Universidade Católica de Minas Gerais</h4>
-
-              <span>2023 — 2024</span>
-
-              <p class="timeline-text">
-                Especialização em Engenharia de Software (Em Andamento)
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Uninassau</h4>
-
-              <span>2020 — 2022</span>
-
-              <p class="timeline-text">
-                Graduação em Análise e Desenvolvimento de Sistemas
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Instituto Federal da Paraíba</h4>
-
-              <span>2016 — 2019</span>
-
-              <p class="timeline-text">
-                Técnico em Informática com ênfase em Desenvolvimento de Software
-              </p>
-
-            </li>
-
-          </ol>
-
-        </section>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Profissional</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">CERTDOX</h4>
-
-              <span>Ago 2022 — Atualmente</span>
-
-              <p class="timeline-text">
-                Analista de Testes/QA PL III
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">CUBOS Tecnologia</h4>
-
-              <span>Ago 2022 - Jan 2023</span>
-
-              <p class="timeline-text">
-                Analista de Testes/QA PL II
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">ZAK</h4>
-
-              <span>Dez 2021 — Jul 2022</span>
-
-              <p class="timeline-text">
-                Analista de Testes/QA PL I
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">MJV Tecnologia e Inovação</h4>
-
-              <span>Out 2021 — Dez 2021</span>
-
-              <p class="timeline-text">
-                Analista de Qualidade Jr.
-              </p>
-
-              <span>Jun 2021 — Out 2021</span>
-
-              <p class="timeline-text">
-                Trainee de Qualidade de Software
-              </p>
-
-            </li>
-
-          </ol>
-
-        </section>
-
-        <section class="skill">
-
-          <h3 class="h3 skills-title">Minhas Skills</h3>
-
-          <ul class="skills-list content-card">
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Testes Funcionais </h5>
-                <data value="90">90%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 90%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Testes Automatizados (Cypress, Selenium Webdriver)</h5>
-                <data value="70">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Testes de Performance</h5>
-                <data value="10">10%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 10%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Testes de API</h5>
-                <data value="70">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
-              </div>
-
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-      <!--
-        - #PORTFOLIO
-      -->
-
-      <article class="portfolio" data-page="portfolio">
-
-        <header>
-          <h2 class="h2 article-title">Portfolio</h2>
-        </header>
-
-        <section class="projects">
-
-          <ul class="filter-list">
-
-            <li class="filter-item">
-              <button class="active" data-filter-btn>All</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Web design</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Applications</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Web development</button>
-            </li>
-
-          </ul>
-
-          <div class="filter-select-box">
-
-            <button class="filter-select" data-select>
-
-              <div class="select-value" data-selecct-value>Select category</div>
-
-              <div class="select-icon">
-                <ion-icon name="chevron-down"></ion-icon>
-              </div>
-
-            </button>
-
-            <ul class="select-list">
-
-              <li class="select-item">
-                <button data-select-item>All</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Web design</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Applications</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Web development</button>
-              </li>
-
-            </ul>
-
-          </div>
-
-          <ul class="project-list">
-
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-1.jpg" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Finance</h3>
-
-                <p class="project-category">Web development</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-2.png" alt="orizon" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Orizon</h3>
-
-                <p class="project-category">Web development</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-3.jpg" alt="fundo" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Fundo</h3>
-
-                <p class="project-category">Web design</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-4.png" alt="brawlhalla" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Brawlhalla</h3>
-
-                <p class="project-category">Applications</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-5.png" alt="dsm." loading="lazy">
-                </figure>
-
-                <h3 class="project-title">DSM.</h3>
-
-                <p class="project-category">Web design</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-6.png" alt="metaspark" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">MetaSpark</h3>
-
-                <p class="project-category">Web design</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-7.png" alt="summary" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Summary</h3>
-
-                <p class="project-category">Web development</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-8.jpg" alt="task manager" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Task Manager</h3>
-
-                <p class="project-category">Applications</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/project-9.png" alt="arrival" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Arrival</h3>
-
-                <p class="project-category">Web development</p>
-
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #BLOG
-      -->
-
-      <article class="blog" data-page="blog">
-
-        <header>
-          <h2 class="h2 article-title">Blog</h2>
-        </header>
-
-        <section class="blog-posts">
-
-          <ul class="blog-posts-list">
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-1.jpg" alt="Design conferences in 2022" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design conferences in 2022</h3>
-
-                  <p class="blog-text">
-                    Veritatis et quasi architecto beatae vitae dicta sunt, explicabo.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-2.jpg" alt="Best fonts every designer" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Best fonts every designer</h3>
-
-                  <p class="blog-text">
-                    Sed ut perspiciatis, nam libero tempore, cum soluta nobis est eligendi.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-3.jpg" alt="Design digest #80" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design digest #80</h3>
-
-                  <p class="blog-text">
-                    Excepteur sint occaecat cupidatat no proident, quis nostrum exercitationem ullam corporis suscipit.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-4.jpg" alt="UI interactions of the week" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">UI interactions of the week</h3>
-
-                  <p class="blog-text">
-                    Enim ad minim veniam, consectetur adipiscing elit, quis nostrud exercitation ullamco laboris nisi.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-5.jpg" alt="The forgotten art of spacing" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">The forgotten art of spacing</h3>
-
-                  <p class="blog-text">
-                    Maxime placeat, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-6.jpg" alt="Design digest #79" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design digest #79</h3>
-
-                  <p class="blog-text">
-                    Optio cumque nihil impedit uo minus quod maxime placeat, velit esse cillum.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #CONTACT
-      -->
-
-      <article class="contact" data-page="contact">
-
-        <header>
-          <h2 class="h2 article-title">Contact</h2>
-        </header>
-
-        <section class="mapbox" data-mapbox>
-          <figure>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199666.5651251294!2d-121.58334177520186!3d38.56165006739519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac672b28397f9%3A0x921f6aaa74197fdb!2sSacramento%2C%20CA%2C%20USA!5e0!3m2!1sen!2sbd!4v1647608789441!5m2!1sen!2sbd"
-              width="400" height="300" loading="lazy"></iframe>
-          </figure>
-        </section>
-
-        <section class="contact-form">
-
-          <h3 class="h3 form-title">Contact Form</h3>
-
-          <form action="#" class="form" data-form>
-
-            <div class="input-wrapper">
-              <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
-
-              <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
-            </div>
-
-            <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
-
-            <button class="form-btn" type="submit" disabled data-form-btn>
-              <ion-icon name="paper-plane"></ion-icon>
-              <span>Send Message</span>
-            </button>
-
-          </form>
-
-        </section>
-
-      </article>
-
+      <div class="topbar-actions">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Alternar tema claro e escuro">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-list">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <div class="hero-id">
+            <img src="./assets/images/me/me.png" alt="Foto de Emanuel Gomes" width="64" height="64" class="hero-avatar">
+            <p class="hero-role">
+              <strong>Emanuel Gomes</strong>
+              <span>Sr. Quality Assurance na RPE, em João Pessoa</span>
+            </p>
+          </div>
+
+          <h1 class="hero-title">Qualidade não é uma fase. É como o time trabalha.</h1>
+
+          <p class="hero-lead">
+            Há <span data-years>5</span> anos ajudo times ágeis a encontrar problemas cedo:
+            no refinamento, no critério de aceite, no pipeline. Automatizo o que se repete
+            e meço o que importa para o produto chegar estável em produção.
+          </p>
+
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#contato">Falar comigo</a>
+            <a class="btn btn-ghost" href="https://www.linkedin.com/in/emanuelgomesqa/" target="_blank" rel="noopener">Ver LinkedIn</a>
+          </div>
+        </div>
+
+        <figure class="runner" aria-label="Execução de testes sobre o perfil de Emanuel">
+          <div class="runner-bar">
+            <span class="runner-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="runner-file">emanuel.spec.ts</span>
+            <button class="runner-rerun" type="button" data-rerun>Rodar de novo</button>
+          </div>
+          <div class="runner-body" data-runner aria-live="polite">
+            <p class="r-cmd"><span class="r-prompt">$</span> npx playwright test emanuel.spec.ts</p>
+            <p class="r-describe">describe('Emanuel Gomes, Sr. QA')</p>
+            <ol class="r-list" data-runner-list></ol>
+            <p class="r-summary" data-runner-summary hidden></p>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ABORDAGEM -->
+    <section class="section" id="abordagem">
+      <div class="wrap two-col">
+        <div>
+          <h2 class="section-title">Como eu trabalho</h2>
+          <div class="prose">
+            <p>
+              Teste no fim do sprint descobre bug caro. Por isso entro cedo: participo do
+              discovery, questiono requisitos ambíguos e escrevo critérios de aceite que o
+              time consegue validar antes de codar.
+            </p>
+            <p>
+              Automação, para mim, é um investimento com retorno medido. Priorizo os fluxos
+              que geram receita, mantenho a suíte rápida e trato teste instável como defeito.
+            </p>
+            <p>
+              Também cuido de quem chega: mentoria técnica, arquitetura de testes e um
+              onboarding de QA que deixa a pessoa produtiva em dias, não em semanas.
+            </p>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <h3 class="metrics-title">Métricas que acompanho</h3>
+          <p class="metrics-note">Cada uma vira uma asserção no meu dia a dia.</p>
+          <ul class="assert-list">
+            <li><code>expect(defectLeakage.critical).toBe(0)</code><span>Nenhum bug crítico escapando para produção</span></li>
+            <li><code>expect(e2eCoverage.checkout).toBeGreaterThan(0.85)</code><span>Cobertura E2E no fluxo principal de conversão</span></li>
+            <li><code>expect(flakyRate).toBeLessThan(0.02)</code><span>Suíte confiável, sem falso alarme</span></li>
+            <li><code>expect(suiteDuration).toBeLessThan(budget)</code><span>Feedback rápido no pipeline</span></li>
+            <li><code>expect(mttr).toBeDecreasing()</code><span>Tempo de recuperação caindo a cada ciclo</span></li>
+            <li><code>expect(automationROI).toBePositive()</code><span>Automação que se paga</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRAJETÓRIA -->
+    <section class="section section-alt" id="trajetoria">
+      <div class="wrap">
+        <h2 class="section-title">Trajetória</h2>
+        <p class="section-lead">De trainee a Sr. QA em <span data-years>5</span> anos, passando por consultoria, startup e meios de pagamento.</p>
+
+        <ol class="timeline">
+          <li class="tl-item is-current">
+            <div class="tl-when"><time datetime="2024-09">set 2024</time> até hoje</div>
+            <div class="tl-what">
+              <h3>Sr. Quality Assurance</h3>
+              <p class="tl-org">RPE, Retail Payment Ecosystem</p>
+              <p>Estratégia de qualidade para o ecossistema de pagamentos: automação E2E e de API, testes de carga com k6 e métricas de qualidade acompanhadas com o time.</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-when"><time datetime="2024-07">jul 2024</time> a <time datetime="2024-09">set 2024</time></div>
+            <div class="tl-what">
+              <h3>Analista de QA Pleno</h3>
+              <p class="tl-org">Minsait</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-when"><time datetime="2022-08">ago 2022</time> a <time datetime="2024-07">jul 2024</time></div>
+            <div class="tl-what">
+              <h3>Analista de QA Pleno III</h3>
+              <p class="tl-org">CertDox</p>
+              <p>Dois anos estruturando testes funcionais e automatizados de uma plataforma de documentos.</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-when"><time datetime="2022-08">ago 2022</time> a <time datetime="2023-01">jan 2023</time></div>
+            <div class="tl-what">
+              <h3>Analista de QA Pleno II</h3>
+              <p class="tl-org">Cubos Tecnologia</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-when"><time datetime="2021-12">dez 2021</time> a <time datetime="2022-07">jul 2022</time></div>
+            <div class="tl-what">
+              <h3>Analista de QA Pleno I</h3>
+              <p class="tl-org">Zak</p>
+            </div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-when"><time datetime="2021-07">jul 2021</time> a <time datetime="2021-12">dez 2021</time></div>
+            <div class="tl-what">
+              <h3>Trainee e Analista de QA Júnior</h3>
+              <p class="tl-org">MJV Tecnologia e Inovação</p>
+              <p>Onde tudo começou.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="edu">
+          <h3 class="sub-title">Formação</h3>
+          <ul class="edu-list">
+            <li><strong>Pós em Quality Assurance e RPA</strong><span>UNIESP</span></li>
+            <li><strong>Pós em Engenharia de Software</strong><span>PUC Minas</span></li>
+            <li><strong>Análise e Desenvolvimento de Sistemas</strong><span>UNINASSAU</span></li>
+            <li><strong>Técnico em Informática</strong><span>IFPB</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <div class="wrap">
+        <h2 class="section-title">Stack</h2>
+        <p class="section-lead">Escolha um contexto para ver as ferramentas que uso nele.</p>
+
+        <div class="tabs" role="tablist" aria-label="Categorias de ferramentas" data-tabs>
+          <button role="tab" aria-selected="true" aria-controls="tab-auto" id="t-auto">Automação</button>
+          <button role="tab" aria-selected="false" aria-controls="tab-api" id="t-api" tabindex="-1">API e mocks</button>
+          <button role="tab" aria-selected="false" aria-controls="tab-ci" id="t-ci" tabindex="-1">CI/CD e infra</button>
+          <button role="tab" aria-selected="false" aria-controls="tab-lang" id="t-lang" tabindex="-1">Linguagens e dados</button>
+          <button role="tab" aria-selected="false" aria-controls="tab-team" id="t-team" tabindex="-1">Time e IA</button>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="tab-auto" aria-labelledby="t-auto">
+          <ul class="chips">
+            <li>Cypress</li><li>Playwright</li><li>Selenium</li><li>Robot Framework</li>
+            <li>Cucumber (BDD)</li><li>JUnit 5</li><li>RestAssured</li><li>k6</li>
+          </ul>
+          <p class="panel-note">E2E web, BDD com o negócio e testes de carga nas APIs críticas.</p>
+        </div>
+        <div class="tab-panel" role="tabpanel" id="tab-api" aria-labelledby="t-api" hidden>
+          <ul class="chips">
+            <li>Postman</li><li>Apidog</li><li>Insomnia</li><li>Swagger</li>
+            <li>sMockin</li><li>Pipedream</li><li>ELK</li>
+          </ul>
+          <p class="panel-note">Contratos, mocks de dependências e investigação de logs.</p>
+        </div>
+        <div class="tab-panel" role="tabpanel" id="tab-ci" aria-labelledby="t-ci" hidden>
+          <ul class="chips">
+            <li>GitHub Actions</li><li>GitLab CI</li><li>Jenkins</li><li>Docker</li>
+            <li>Kubernetes</li><li>AWS</li><li>Portainer</li>
+          </ul>
+          <p class="panel-note">Testes rodando a cada push, em ambientes reproduzíveis.</p>
+        </div>
+        <div class="tab-panel" role="tabpanel" id="tab-lang" aria-labelledby="t-lang" hidden>
+          <ul class="chips">
+            <li>TypeScript</li><li>JavaScript</li><li>Java</li><li>Python</li><li>PHP</li>
+            <li>PostgreSQL</li><li>MySQL</li><li>MongoDB</li><li>Oracle</li><li>Redis</li><li>Supabase</li>
+          </ul>
+          <p class="panel-note">Escrevo a automação na linguagem do time e valido direto no banco.</p>
+        </div>
+        <div class="tab-panel" role="tabpanel" id="tab-team" aria-labelledby="t-team" hidden>
+          <ul class="chips">
+            <li>Jira</li><li>Confluence</li><li>Notion</li><li>ClickUp</li><li>Miro</li>
+            <li>Claude</li><li>ChatGPT</li><li>Gemini</li>
+          </ul>
+          <p class="panel-note">IA para acelerar cenários complexos e otimizar scripts, sempre com revisão humana.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section class="section section-alt" id="projetos">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Projetos no GitHub</h2>
+            <p class="section-lead" data-repos-status>Carregando os repositórios atualizados mais recentemente…</p>
+          </div>
+          <a class="btn btn-ghost" href="https://github.com/emanuelgomesqa" target="_blank" rel="noopener">Abrir perfil no GitHub</a>
+        </div>
+        <ul class="repos" data-repos aria-busy="true"></ul>
+      </div>
+    </section>
+
+    <!-- CERTIFICAÇÕES -->
+    <section class="section" id="certificacoes">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Certificações e cursos</h2>
+            <p class="section-lead">Cada item abre a credencial original para verificação.</p>
+          </div>
+          <a class="btn btn-ghost" href="https://www.credly.com/users/emanuelgomesqa" target="_blank" rel="noopener">Ver perfil no Credly</a>
+        </div>
+
+        <h3 class="sub-title certs-group">Certificações por exame</h3>
+        <ul class="certs">
+          <li>
+            <a href="https://www.credly.com/badges/c1ba4d9c-a489-4efa-a27c-06b3270c98a1/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/sfpc.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Scrum Foundation Professional (SFPC)</strong><span>CertiProf, 2021 e 2022</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.credly.com/badges/642530fa-612b-498c-b198-c5fa1623cdd3/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/lgpdf.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Fundamentos da LGPD (LGPDF)</strong><span>CertiProf, 2022</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="./licenses/six_sigma_yellow_belt.pdf" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/yellow-belt.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Six Sigma Yellow Belt</strong><span>6sigmastudy, 2022</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.credly.com/badges/c5ff1e16-0963-44e2-a10f-7e51a1af3e81/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/rwpc.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Remote Work Professional (RWPC)</strong><span>CertiProf, 2023</span></span>
+            </a>
+          </li>
+        </ul>
+
+        <h3 class="sub-title certs-group">Cursos e badges</h3>
+        <ul class="certs">
+          <li>
+            <a href="https://www.credly.com/badges/4756a6f4-a2aa-4ddc-8419-83a4d2802c56/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/aws-genai.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Introduction to Generative AI</strong><span>AWS Educate, 2025</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.credly.com/badges/6cb165a6-724c-44c9-81eb-20381d21866e/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/cybersecurity-2025.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Cybersecurity Awareness</strong><span>CertiProf, 2025</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.credly.com/badges/df5129bf-125f-4902-a271-11c77ef2a446/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/design-sprint-2025.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Design Sprint</strong><span>CertiProf, 2025</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="./licenses/rVBQpjBUWxeOYJ88sscnoPza8GqL0oWR.240154.87338.pdf" target="_blank" rel="noopener">
+              <span class="cert-mark" aria-hidden="true">API</span>
+              <span class="cert-text"><strong>APIs e Web Services</strong><span>PUC Minas, 2023, 24 horas</span></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.credly.com/badges/bc1b2a34-0f63-4f43-a57a-205676485f30/public_url" target="_blank" rel="noopener">
+              <img src="./assets/images/certifications/lifelong-2026.png" alt="" width="56" height="56" loading="lazy">
+              <span class="cert-text"><strong>Lifelong Learning</strong><span>CertiProf, 2022, 2025 e 2026</span></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section contact" id="contato">
+      <div class="wrap contact-grid">
+        <div>
+          <h2 class="section-title">Vamos conversar</h2>
+          <p class="section-lead">
+            Estou aberto a conversas sobre liderança de QA, arquitetura de testes e
+            mentoria. Respondo mais rápido por e-mail ou LinkedIn.
+          </p>
+          <div class="email-row">
+            <a class="email-link" href="mailto:emanuelgomesqa@gmail.com">emanuelgomesqa@gmail.com</a>
+            <button class="btn btn-ghost btn-sm" type="button" data-copy="emanuelgomesqa@gmail.com">Copiar e-mail</button>
+            <span class="copy-status" role="status" data-copy-status></span>
+          </div>
+        </div>
+        <ul class="links">
+          <li><a href="https://www.linkedin.com/in/emanuelgomesqa/" target="_blank" rel="noopener"><strong>LinkedIn</strong><span>/in/emanuelgomesqa</span></a></li>
+          <li><a href="https://github.com/emanuelgomesqa" target="_blank" rel="noopener"><strong>GitHub</strong><span>@emanuelgomesqa</span></a></li>
+          <li><a href="https://medium.com/@emanuelgomesqa" target="_blank" rel="noopener"><strong>Medium</strong><span>@emanuelgomesqa</span></a></li>
+          <li><a href="https://wa.me/5583998558560" target="_blank" rel="noopener"><strong>WhatsApp</strong><span>+55 83 99855-8560</span></a></li>
+        </ul>
+      </div>
+    </section>
 
   </main>
 
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>© <span data-year>2026</span> Emanuel Gomes. João Pessoa, Paraíba.</p>
+      <p class="footer-pass"><span aria-hidden="true">✓</span> Revisado no celular, no desktop e nos temas claro e escuro.</p>
+    </div>
+  </footer>
 
-
-
-
-
-  <!--
-    - custom js link
-  -->
-  <script src="./assets/js/script.js"></script>
-
-  <!--
-    - ionicon link
-  -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
+  <script src="./assets/js/script.js" defer></script>
 </body>
 
 </html>
